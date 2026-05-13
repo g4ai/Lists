@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matomo Integrations Business Catalog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --purple:#4B2AAD;
+  --purple2:#6B46D9;
+  --bg:#f5f7fb;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header {
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:white;
+  padding:34px 42px;
+}
+header h1 {
+  margin:0 0 10px;
+  font-size:32px;
+}
+header p {
+  margin:0;
+  max-width:1100px;
+  line-height:1.6;
+  opacity:.95;
+}
+main {
+  padding:28px 42px 44px;
+}
+.summary {
+  display:grid;
+  grid-template-columns: repeat(4,minmax(160px,1fr));
+  gap:16px;
+  margin-bottom:20px;
+}
+.card {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+}
+.card .num {
+  font-size:28px;
+  font-weight:700;
+  color:var(--purple);
+}
+.card .label {
+  color:var(--muted);
+  margin-top:6px;
+}
+.controls {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+}
+input, select {
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:14px;
+}
+.table-wrap {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:auto;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:1180px;
+}
+th {
+  background:#24115f;
+  color:white;
+  padding:13px 12px;
+  text-align:left;
+  position:sticky;
+  top:0;
+  z-index:1;
+  white-space:nowrap;
+}
+td {
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  vertical-align:top;
+  line-height:1.45;
+}
+tr:hover { background:#f7f5ff; }
+.logo {
+  width:34px;
+  height:34px;
+  border-radius:8px;
+  object-fit:contain;
+  background:#fff;
+  border:1px solid #eee;
+}
+.business {
+  color:var(--purple);
+  font-weight:700;
+}
+.badge {
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:999px;
+  color:white;
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.open { background:#16803c; }
+.opencore { background:#2563eb; }
+.freemium { background:#d97706; }
+.commercial { background:#dc2626; }
+.unknown { background:#6b7280; }
+.note {
+  margin-top:14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+a { color:#2563eb; text-decoration:none; }
+a:hover { text-decoration:underline; }
+@media(max-width:900px) {
+  header, main { padding-left:18px; padding-right:18px; }
+  .summary, .controls { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Matomo Integrations — Business Technology Catalog</h1>
+  <p>
+    A business-friendly catalog based on Matomo’s integrations page. It reorganizes the integrations into
+    clear business areas, adds practical definitions, highlights open-source options, and links to official websites.
+  </p>
+</header>
+<main>
+  <section class="summary">
+    <div class="card"><div class="num">117</div><div class="label">Catalog entries included</div></div>
+    <div class="card"><div class="num">9</div><div class="label">Business areas</div></div>
+    <div class="card"><div class="num">66</div><div class="label">Open-source / source-available highlighted</div></div>
+    <div class="card"><div class="num">7</div><div class="label">Original Matomo page categories mapped</div></div>
+  </section>
+
+  <section class="controls">
+    <input id="search" placeholder="Search product, category, description, license...">
+    <select id="businessFilter">
+      <option value="">All business areas</option>
+      <option value="Analytics &amp; Reporting">Analytics &amp; Reporting</option><option value="Customer &amp; Marketing Systems">Customer &amp; Marketing Systems</option><option value="Data &amp; Integration Platforms">Data &amp; Integration Platforms</option><option value="Developer &amp; Infrastructure Platforms">Developer &amp; Infrastructure Platforms</option><option value="Enterprise &amp; Internal Systems">Enterprise &amp; Internal Systems</option><option value="Mobile &amp; Applications">Mobile &amp; Applications</option><option value="Online Sales &amp; Commerce">Online Sales &amp; Commerce</option><option value="Security, Privacy &amp; Compliance">Security, Privacy &amp; Compliance</option><option value="Website &amp; Digital Experience">Website &amp; Digital Experience</option>
+    </select>
+    <select id="licenseFilter">
+      <option value="">All license types</option>
+      <option value="Commercial">Commercial</option><option value="Commercial / Legacy">Commercial / Legacy</option><option value="Freemium">Freemium</option><option value="Open Core">Open Core</option><option value="Open Source">Open Source</option><option value="Open Source / Legacy">Open Source / Legacy</option><option value="Unknown / Check">Unknown / Check</option>
+    </select>
+  </section>
+
+  <div class="table-wrap">
+    <table id="catalog">
+      <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Business Area</th>
+          <th>Technical Category</th>
+          <th>Product / Service</th>
+          <th>Business-Friendly Description</th>
+          <th>License</th>
+          <th>Hosting</th>
+          <th>Official Website</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=wordpress.org&sz=64" alt="WordPress logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>WordPress</strong></td>
+      <td>Free, open-source CMS used to create and manage websites and blogs without needing to code.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://wordpress.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.joomla.org&sz=64" alt="Joomla logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Joomla</strong></td>
+      <td>Open-source CMS used to build websites, portals, intranets, and online applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://www.joomla.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=typo3.org&sz=64" alt="TYPO3 logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>TYPO3</strong></td>
+      <td>Enterprise-grade open-source CMS for complex websites, portals, and multilingual digital experiences.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://typo3.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=contao.org&sz=64" alt="Contao logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Contao</strong></td>
+      <td>Open-source CMS for building accessible, professional websites and web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://contao.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=dotclear.org&sz=64" alt="Dotclear logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Dotclear</strong></td>
+      <td>Open-source blogging and publishing platform.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://dotclear.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=grafana.com&sz=64" alt="Grafana logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>Dashboard / Monitoring</td>
+      <td><strong>Grafana</strong></td>
+      <td>Open-source analytics and monitoring platform used to build dashboards from many data sources.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://grafana.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.mediawiki.org&sz=64" alt="MediaWiki logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Wiki / Knowledge Base</td>
+      <td><strong>MediaWiki</strong></td>
+      <td>Open-source wiki platform best known as the software behind Wikipedia.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.mediawiki.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.spip.net&sz=64" alt="SPIP logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Publishing Platform</td>
+      <td><strong>SPIP</strong></td>
+      <td>Open-source publishing system used to manage editorial websites and online content.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.spip.net" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=blogs.hyvor.com&sz=64" alt="Hyvor Blogs logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Blogging Platform</td>
+      <td><strong>Hyvor Blogs</strong></td>
+      <td>Hosted blogging platform focused on privacy-friendly and developer-friendly publishing.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://blogs.hyvor.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.squarespace.com&sz=64" alt="Squarespace logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Website Builder</td>
+      <td><strong>Squarespace</strong></td>
+      <td>Commercial cloud website builder used to create professional websites with templates and no-code tools.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.squarespace.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.getoutline.com&sz=64" alt="Outline logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Knowledge Base</td>
+      <td><strong>Outline</strong></td>
+      <td>Open-source team knowledge base and documentation platform.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://www.getoutline.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=ghost.org&sz=64" alt="Ghost logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Publishing Platform</td>
+      <td><strong>Ghost</strong></td>
+      <td>Open-source publishing platform for blogs, newsletters, and membership websites.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://ghost.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=lutece.paris.fr&sz=64" alt="Lutece logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Digital Services Platform</td>
+      <td><strong>Lutece</strong></td>
+      <td>Open-source Java platform for building websites and digital public services.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://lutece.paris.fr" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=backdropcms.org&sz=64" alt="Backdrop CMS logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Backdrop CMS</strong></td>
+      <td>Open-source CMS derived from Drupal, aimed at small and medium websites.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://backdropcms.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=moodle.org&sz=64" alt="Moodle logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Learning Management System</td>
+      <td><strong>Moodle</strong></td>
+      <td>Open-source learning management system used by schools, universities, and training teams.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://moodle.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=pimcore.com&sz=64" alt="Pimcore logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Digital Experience / PIM</td>
+      <td><strong>Pimcore</strong></td>
+      <td>Open-source digital experience platform for product information, content, commerce, and data management.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://pimcore.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=thirtybees.com&sz=64" alt="Thirty Bees logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>Thirty Bees</strong></td>
+      <td>Open-source ecommerce platform based on PrestaShop, used to run online stores.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://thirtybees.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.drupal.org&sz=64" alt="Drupal logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Drupal</strong></td>
+      <td>Open-source CMS used for secure, scalable websites, portals, and digital government services.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://www.drupal.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=getkirby.com&sz=64" alt="Kirby CMS logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Kirby CMS</strong></td>
+      <td>Flat-file CMS used by designers and developers to create custom websites.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://getkirby.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.neos.io&sz=64" alt="Neos CMS logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Website Platform</td>
+      <td><strong>Neos CMS</strong></td>
+      <td>Open-source content application platform for custom websites and digital experiences.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.neos.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.datocms.com&sz=64" alt="DatoCMS logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Headless CMS</td>
+      <td><strong>DatoCMS</strong></td>
+      <td>Cloud-based headless CMS used to manage structured content for websites and apps.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.datocms.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.sitejet.io&sz=64" alt="SiteJet logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Website Builder</td>
+      <td><strong>SiteJet</strong></td>
+      <td>Low-code/no-code website builder and CMS for creating business websites.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.sitejet.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Freemium">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=lineupr.com&sz=64" alt="LineUpr logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Event Platform</td>
+      <td><strong>LineUpr</strong></td>
+      <td>Digital event platform for event apps, surveys, networking, and participant engagement.</td>
+      <td><span class="badge freemium">Freemium</span></td>
+      <td>Cloud</td>
+      <td><a href="https://lineupr.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=woocommerce.com&sz=64" alt="WooCommerce logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>WooCommerce</strong></td>
+      <td>Open-source ecommerce plugin for WordPress used to build online stores.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://woocommerce.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=business.adobe.com&sz=64" alt="Adobe Commerce / Magento logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>Adobe Commerce / Magento</strong></td>
+      <td>Enterprise ecommerce platform; Magento Open Source is free and Adobe Commerce is commercial.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://business.adobe.com/products/magento/magento-commerce.html" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=prestashop.com&sz=64" alt="PrestaShop logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>PrestaShop</strong></td>
+      <td>Open-source ecommerce platform used to build and manage online stores.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://prestashop.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.bigcommerce.com&sz=64" alt="BigCommerce logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>BigCommerce</strong></td>
+      <td>Commercial cloud ecommerce platform for online stores and digital commerce.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.bigcommerce.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=thelia.net&sz=64" alt="Thelia logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>Thelia</strong></td>
+      <td>Open-source ecommerce solution built with Symfony for online shops and custom commerce projects.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://thelia.net" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.shopify.com&sz=64" alt="Shopify logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>Shopify</strong></td>
+      <td>Commercial cloud ecommerce platform for creating and running online stores.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.shopify.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.shopware.com&sz=64" alt="Shopware logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>Shopware</strong></td>
+      <td>Ecommerce platform used to build modern online stores; available in open-source and commercial editions.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://www.shopware.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.hikashop.com&sz=64" alt="HikaShop logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Extension</td>
+      <td><strong>HikaShop</strong></td>
+      <td>Ecommerce extension for Joomla used to add online store capabilities to Joomla websites.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.hikashop.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.zen-cart.com&sz=64" alt="Zen Cart logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>Zen Cart</strong></td>
+      <td>Open-source ecommerce shopping cart system for building online stores.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.zen-cart.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.opencart.com&sz=64" alt="OpenCart logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>OpenCart</strong></td>
+      <td>Open-source ecommerce platform for creating online stores and managing products, orders, and customers.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.opencart.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.clicshopping.org&sz=64" alt="ClicShopping logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>ClicShopping</strong></td>
+      <td>Open-source ecommerce platform for creating and managing online stores.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.clicshopping.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.oxid-esales.com&sz=64" alt="OXID eShop logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>OXID eShop</strong></td>
+      <td>Ecommerce platform for online shops, available in community and commercial editions.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://www.oxid-esales.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Online Sales &amp; Commerce" data-license="Unknown / Check">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="SilverCart logo"></td>
+      <td><span class="business">Online Sales &amp; Commerce</span></td>
+      <td>E-Commerce Platform</td>
+      <td><strong>SilverCart</strong></td>
+      <td>Ecommerce solution for SilverStripe-based online shops.</td>
+      <td><span class="badge unknown">Unknown / Check</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://github.com/silvercart" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Customer &amp; Marketing Systems" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="Mist Analytics / Matomo Surveys logo"></td>
+      <td><span class="business">Customer &amp; Marketing Systems</span></td>
+      <td>Survey / Feedback</td>
+      <td><strong>Mist Analytics / Matomo Surveys</strong></td>
+      <td>Survey integration for collecting qualitative visitor feedback and combining it with analytics.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://github.com/StefKoning/matomo-surveys" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.atlassian.com&sz=64" alt="Jira logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Project Management</td>
+      <td><strong>Jira</strong></td>
+      <td>Atlassian project and issue tracking platform used by software and business teams.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Both</td>
+      <td><a href="https://www.atlassian.com/software/jira" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.open-xchange.com&sz=64" alt="Open-Xchange logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Collaboration Suite</td>
+      <td><strong>Open-Xchange</strong></td>
+      <td>Email, collaboration, and cloud application suite for service providers and organizations.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Both</td>
+      <td><a href="https://www.open-xchange.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=joinpeertube.org&sz=64" alt="PeerTube logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Video Platform</td>
+      <td><strong>PeerTube</strong></td>
+      <td>Open-source federated video hosting platform.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://joinpeertube.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=sonar.software&sz=64" alt="Sonar logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>CRM / ISP Platform</td>
+      <td><strong>Sonar</strong></td>
+      <td>Business management and CRM platform often used by internet service providers.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://sonar.software" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.atlassian.com&sz=64" alt="Atlassian Confluence logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Knowledge Management</td>
+      <td><strong>Atlassian Confluence</strong></td>
+      <td>Team workspace and knowledge management platform for documentation and collaboration.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Both</td>
+      <td><a href="https://www.atlassian.com/software/confluence" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Customer &amp; Marketing Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=vwo.com&sz=64" alt="VWO logo"></td>
+      <td><span class="business">Customer &amp; Marketing Systems</span></td>
+      <td>A/B Testing</td>
+      <td><strong>VWO</strong></td>
+      <td>Conversion optimization and A/B testing platform for improving websites and user journeys.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://vwo.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.photodeck.com&sz=64" alt="PhotoDeck logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Photography Website Platform</td>
+      <td><strong>PhotoDeck</strong></td>
+      <td>Commercial website and gallery platform for photographers and creative professionals.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.photodeck.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Customer &amp; Marketing Systems" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.limesurvey.org&sz=64" alt="LimeSurvey logo"></td>
+      <td><span class="business">Customer &amp; Marketing Systems</span></td>
+      <td>Survey Platform</td>
+      <td><strong>LimeSurvey</strong></td>
+      <td>Open-source online survey application for creating questionnaires and collecting responses.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://www.limesurvey.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.mantisbt.org&sz=64" alt="MantisBT logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Issue Tracking</td>
+      <td><strong>MantisBT</strong></td>
+      <td>Open-source issue tracking system used to manage bugs and project tasks.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.mantisbt.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Unknown / Check">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="Koken logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Photo Publishing</td>
+      <td><strong>Koken</strong></td>
+      <td>Content management and publishing platform for photographers and visual portfolios.</td>
+      <td><span class="badge unknown">Unknown / Check</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://github.com/koken" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.odoo.com&sz=64" alt="Odoo logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>ERP / CRM</td>
+      <td><strong>Odoo</strong></td>
+      <td>Business application suite covering ERP, CRM, accounting, inventory, HR, and websites.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://www.odoo.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=akaunting.com&sz=64" alt="Akaunting logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Accounting</td>
+      <td><strong>Akaunting</strong></td>
+      <td>Online accounting software for small businesses, available as open-source and cloud editions.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://akaunting.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=mediagoblin.org&sz=64" alt="GNU MediaGoblin logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Media Platform</td>
+      <td><strong>GNU MediaGoblin</strong></td>
+      <td>Open-source media publishing platform for hosting and sharing media.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://mediagoblin.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=plugins.matomo.org&sz=64" alt="MCP Server logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>AI / Analytics API</td>
+      <td><strong>MCP Server</strong></td>
+      <td>Model Context Protocol server that exposes Matomo analytics to AI assistants and developer tools.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://plugins.matomo.org/Morpheus" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.android.com&sz=64" alt="Android logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Mobile SDK</td>
+      <td><strong>Android</strong></td>
+      <td>Google’s mobile operating system and app ecosystem; Matomo integrations track Android app usage.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://www.android.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=developer.apple.com&sz=64" alt="iOS logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Mobile SDK</td>
+      <td><strong>iOS</strong></td>
+      <td>Apple’s mobile operating system; Matomo integrations track iPhone and iPad app usage.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://developer.apple.com/ios" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=angular.dev&sz=64" alt="Angular logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Frontend Framework</td>
+      <td><strong>Angular</strong></td>
+      <td>Open-source web application framework for building single-page and enterprise web apps.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://angular.dev" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="React logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Frontend Library</td>
+      <td><strong>React</strong></td>
+      <td>Open-source JavaScript library for building web user interfaces.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://react.dev" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=nodejs.org&sz=64" alt="Node.js logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Runtime / Backend</td>
+      <td><strong>Node.js</strong></td>
+      <td>Open-source JavaScript runtime used to build server-side applications and APIs.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://nodejs.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=vuejs.org&sz=64" alt="Vue.js logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Frontend Framework</td>
+      <td><strong>Vue.js</strong></td>
+      <td>Open-source JavaScript framework for building user interfaces and single-page applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://vuejs.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=reactnative.dev&sz=64" alt="React Native / Expo logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Mobile Framework</td>
+      <td><strong>React Native / Expo</strong></td>
+      <td>Framework and platform for building mobile apps using React and JavaScript.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://reactnative.dev" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=flutter.dev&sz=64" alt="Flutter logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Mobile Framework</td>
+      <td><strong>Flutter</strong></td>
+      <td>Open-source UI framework from Google for building mobile, web, and desktop apps.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://flutter.dev" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Customer &amp; Marketing Systems" data-license="Freemium">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=tagmanager.google.com&sz=64" alt="Google Tag Manager Server-Side logo"></td>
+      <td><span class="business">Customer &amp; Marketing Systems</span></td>
+      <td>Tag Management</td>
+      <td><strong>Google Tag Manager Server-Side</strong></td>
+      <td>Server-side tag management used to route tracking data through a server container.</td>
+      <td><span class="badge freemium">Freemium</span></td>
+      <td>Cloud</td>
+      <td><a href="https://tagmanager.google.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=n8n.io&sz=64" alt="n8n logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Workflow Automation</td>
+      <td><strong>n8n</strong></td>
+      <td>Workflow automation platform for connecting apps and APIs; available as source-available/self-hosted and cloud.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://n8n.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=gohugo.io&sz=64" alt="Hugo logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>Static Site Generator</td>
+      <td><strong>Hugo</strong></td>
+      <td>Open-source static site generator used to build fast websites from Markdown and templates.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://gohugo.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.ruby-lang.org&sz=64" alt="Ruby logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>Ruby</strong></td>
+      <td>Open-source programming language commonly used for web applications and scripting.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.ruby-lang.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=isocpp.org&sz=64" alt="C++ logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>C++</strong></td>
+      <td>General-purpose programming language used for high-performance applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://isocpp.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=twig.symfony.com&sz=64" alt="Twig logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Template Engine</td>
+      <td><strong>Twig</strong></td>
+      <td>Open-source template engine for PHP applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://twig.symfony.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=router5.js.org&sz=64" alt="router5 logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Router Library</td>
+      <td><strong>router5</strong></td>
+      <td>JavaScript routing library used in web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://router5.js.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.gwtproject.org&sz=64" alt="Google Web Toolkit logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Web Toolkit</td>
+      <td><strong>Google Web Toolkit</strong></td>
+      <td>Development toolkit for building browser-based applications in Java.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.gwtproject.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Data &amp; Integration Platforms" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.rudderstack.com&sz=64" alt="RudderStack logo"></td>
+      <td><span class="business">Data &amp; Integration Platforms</span></td>
+      <td>Customer Data Platform</td>
+      <td><strong>RudderStack</strong></td>
+      <td>Customer data platform used to collect, transform, and route event data to analytics tools.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://www.rudderstack.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.cloudron.io&sz=64" alt="Cloudron logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Self-Hosting Platform</td>
+      <td><strong>Cloudron</strong></td>
+      <td>Platform for installing and managing web apps on your own server.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.cloudron.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=mojolicious.org&sz=64" alt="Mojolicious logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Web Framework</td>
+      <td><strong>Mojolicious</strong></td>
+      <td>Open-source real-time web framework for Perl.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://mojolicious.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.martez.io&sz=64" alt="Matomo Heatmap Helper logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>Browser Extension</td>
+      <td><strong>Matomo Heatmap Helper</strong></td>
+      <td>Open-source browser extension that helps fix Matomo heatmap screenshot issues.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.martez.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.python.org&sz=64" alt="Python logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>Python</strong></td>
+      <td>Open-source programming language used for web apps, automation, data science, and APIs.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.python.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.java.com&sz=64" alt="Java logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>Java</strong></td>
+      <td>Widely used programming language and platform for enterprise applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.java.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=laravel.com&sz=64" alt="Laravel logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Backend Framework</td>
+      <td><strong>Laravel</strong></td>
+      <td>Open-source PHP framework for building web applications and APIs.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://laravel.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=dart.dev&sz=64" alt="Dart logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>Dart</strong></td>
+      <td>Open-source programming language used mainly with Flutter for cross-platform apps.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://dart.dev" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=angularjs.org&sz=64" alt="AngularJS logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Frontend Framework</td>
+      <td><strong>AngularJS</strong></td>
+      <td>Older open-source JavaScript framework for dynamic web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://angularjs.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.php.net&sz=64" alt="PHP logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>PHP</strong></td>
+      <td>Open-source server-side scripting language widely used for web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.php.net" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=symfony.com&sz=64" alt="Symfony logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Backend Framework</td>
+      <td><strong>Symfony</strong></td>
+      <td>Open-source PHP framework and component library for web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://symfony.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=dotnet.microsoft.com&sz=64" alt="Xamarin logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Mobile Framework</td>
+      <td><strong>Xamarin</strong></td>
+      <td>Microsoft framework for building cross-platform mobile apps with C# and .NET.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://dotnet.microsoft.com/apps/xamarin" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Commercial / Legacy">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.microsoft.com&sz=64" alt="Silverlight logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Application Framework</td>
+      <td><strong>Silverlight</strong></td>
+      <td>Legacy Microsoft application framework for rich web applications.</td>
+      <td><span class="badge commercial">Commercial / Legacy</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.microsoft.com/silverlight" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="Redux Beacon logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>State Management</td>
+      <td><strong>Redux Beacon</strong></td>
+      <td>Open-source library for tracking analytics events from Redux applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://github.com/rangle/redux-beacon" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Website &amp; Digital Experience" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=zikula.org&sz=64" alt="Zikula logo"></td>
+      <td><span class="business">Website &amp; Digital Experience</span></td>
+      <td>CMS / Application Framework</td>
+      <td><strong>Zikula</strong></td>
+      <td>Open-source PHP application framework and CMS.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://zikula.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Core">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.convertigo.com&sz=64" alt="Convertigo logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Low-Code Mobile Platform</td>
+      <td><strong>Convertigo</strong></td>
+      <td>Open-source low-code platform for building enterprise mobile and web applications.</td>
+      <td><span class="badge opencore">Open Core</span></td>
+      <td>Both</td>
+      <td><a href="https://www.convertigo.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=reactrouter.com&sz=64" alt="React Router logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Frontend Routing</td>
+      <td><strong>React Router</strong></td>
+      <td>Open-source routing library for React web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://reactrouter.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=modelcontextprotocol.io&sz=64" alt="Model Context Protocol logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>AI Integration Protocol</td>
+      <td><strong>Model Context Protocol</strong></td>
+      <td>Open protocol for connecting AI assistants to tools and data sources.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=developer.apple.com&sz=64" alt="Objective-C logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Programming Language</td>
+      <td><strong>Objective-C</strong></td>
+      <td>Programming language historically used for Apple iOS and macOS applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=nextjs.org&sz=64" alt="Next.js logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Web Framework</td>
+      <td><strong>Next.js</strong></td>
+      <td>Open-source React framework for building web applications and websites.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://nextjs.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.djangoproject.com&sz=64" alt="Django logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Backend Framework</td>
+      <td><strong>Django</strong></td>
+      <td>Open-source Python web framework for building secure, scalable web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://www.djangoproject.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=learn.microsoft.com&sz=64" alt="C# logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Programming Language</td>
+      <td><strong>C#</strong></td>
+      <td>Microsoft programming language used for enterprise, desktop, web, and cloud applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://learn.microsoft.com/dotnet/csharp" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=nuxt.com&sz=64" alt="Nuxt.js logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Frontend Framework</td>
+      <td><strong>Nuxt.js</strong></td>
+      <td>Open-source framework for building Vue-based web applications.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://nuxt.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Mobile &amp; Applications" data-license="Open Source / Legacy">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="Appcelerator Titanium logo"></td>
+      <td><span class="business">Mobile &amp; Applications</span></td>
+      <td>Mobile Framework</td>
+      <td><strong>Appcelerator Titanium</strong></td>
+      <td>Framework for building native mobile apps using JavaScript.</td>
+      <td><span class="badge unknown">Open Source / Legacy</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://github.com/tidev/titanium-sdk" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=getlaminas.org&sz=64" alt="Zend Framework / Laminas logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Backend Framework</td>
+      <td><strong>Zend Framework / Laminas</strong></td>
+      <td>Open-source PHP framework now continued as the Laminas Project.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://getlaminas.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source / Legacy">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="Silex logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Backend Framework</td>
+      <td><strong>Silex</strong></td>
+      <td>Legacy PHP micro-framework based on Symfony components.</td>
+      <td><span class="badge unknown">Open Source / Legacy</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://github.com/silexphp/Silex" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.contentserv.com&sz=64" alt="Contentserv logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Product Information Management</td>
+      <td><strong>Contentserv</strong></td>
+      <td>Commercial product information management and digital asset management platform.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Both</td>
+      <td><a href="https://www.contentserv.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Developer &amp; Infrastructure Platforms" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=packagist.org&sz=64" alt="Packagist / PHP API logo"></td>
+      <td><span class="business">Developer &amp; Infrastructure Platforms</span></td>
+      <td>Package / API Library</td>
+      <td><strong>Packagist / PHP API</strong></td>
+      <td>PHP package ecosystem and API libraries used to integrate applications with Matomo.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Self-Hosted</td>
+      <td><a href="https://packagist.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.cookiebot.com&sz=64" alt="Cookiebot logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Cookiebot</strong></td>
+      <td>Consent management platform used to manage cookies and visitor consent.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.cookiebot.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.onetrust.com&sz=64" alt="OneTrust logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>OneTrust</strong></td>
+      <td>Privacy, governance, and consent management platform for compliance programs.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.onetrust.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.osano.com&sz=64" alt="Osano logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Osano</strong></td>
+      <td>Consent management and privacy compliance platform.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.osano.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.cookiehub.com&sz=64" alt="CookieHub logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>CookieHub</strong></td>
+      <td>Consent management platform for GDPR, CCPA, and cookie compliance.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.cookiehub.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Freemium">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=complianz.io&sz=64" alt="Complianz logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Complianz</strong></td>
+      <td>WordPress privacy and cookie consent plugin for GDPR/CCPA compliance.</td>
+      <td><span class="badge freemium">Freemium</span></td>
+      <td>Both</td>
+      <td><a href="https://complianz.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=tarteaucitron.io&sz=64" alt="Tarte au Citron logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Tarte au Citron</strong></td>
+      <td>Consent management solution focused on privacy and cookie consent.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://tarteaucitron.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Open Source">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=klaro.org&sz=64" alt="Klaro logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Klaro</strong></td>
+      <td>Open-source consent management platform for privacy-friendly websites.</td>
+      <td><span class="badge open">Open Source</span></td>
+      <td>Both</td>
+      <td><a href="https://klaro.org" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=usercentrics.com&sz=64" alt="Usercentrics logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Usercentrics</strong></td>
+      <td>Consent management platform for privacy compliance and user consent preferences.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://usercentrics.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Freemium">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.cookieyes.com&sz=64" alt="CookieYes logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>CookieYes</strong></td>
+      <td>Cookie consent and privacy compliance platform.</td>
+      <td><span class="badge freemium">Freemium</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.cookieyes.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.axept.io&sz=64" alt="Axeptio logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Axeptio</strong></td>
+      <td>Consent management platform for managing cookie banners and visitor consent.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.axept.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=cookie-script.com&sz=64" alt="CookieScript logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>CookieScript</strong></td>
+      <td>Cookie consent management platform for privacy compliance.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://cookie-script.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Security, Privacy &amp; Compliance" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.didomi.io&sz=64" alt="Didomi logo"></td>
+      <td><span class="business">Security, Privacy &amp; Compliance</span></td>
+      <td>Consent Management Platform</td>
+      <td><strong>Didomi</strong></td>
+      <td>Consent and preference management platform for privacy compliance.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.didomi.io" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=matomo.org&sz=64" alt="Matomo Data Warehouse Connector logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>Data Warehouse Connector</td>
+      <td><strong>Matomo Data Warehouse Connector</strong></td>
+      <td>Matomo feature for exporting raw analytics data into data warehouses for deeper analysis.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://matomo.org/feature/data-warehouse-connector" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=powerbi.microsoft.com&sz=64" alt="Microsoft Power BI logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>BI / Dashboard</td>
+      <td><strong>Microsoft Power BI</strong></td>
+      <td>Microsoft business intelligence platform for dashboards, analytics, and interactive reporting.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://powerbi.microsoft.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Freemium">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=lookerstudio.google.com&sz=64" alt="Google Looker Studio logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>BI / Dashboard</td>
+      <td><strong>Google Looker Studio</strong></td>
+      <td>Google dashboard and reporting tool for creating interactive data reports.</td>
+      <td><span class="badge freemium">Freemium</span></td>
+      <td>Cloud</td>
+      <td><a href="https://lookerstudio.google.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Data &amp; Integration Platforms" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.snowflake.com&sz=64" alt="Snowflake logo"></td>
+      <td><span class="business">Data &amp; Integration Platforms</span></td>
+      <td>Data Warehouse</td>
+      <td><strong>Snowflake</strong></td>
+      <td>Cloud data warehouse platform used to store, process, and analyze large datasets.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.snowflake.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.tableau.com&sz=64" alt="Tableau logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>BI / Dashboard</td>
+      <td><strong>Tableau</strong></td>
+      <td>Data visualization and analytics platform for interactive dashboards and reporting.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Both</td>
+      <td><a href="https://www.tableau.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Data &amp; Integration Platforms" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=cloud.google.com&sz=64" alt="Google BigQuery logo"></td>
+      <td><span class="business">Data &amp; Integration Platforms</span></td>
+      <td>Data Warehouse</td>
+      <td><strong>Google BigQuery</strong></td>
+      <td>Google Cloud data warehouse for large-scale analytics and SQL-based data analysis.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://cloud.google.com/bigquery" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.qlik.com&sz=64" alt="Qlik Sense logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>BI / Dashboard</td>
+      <td><strong>Qlik Sense</strong></td>
+      <td>Business intelligence and analytics platform for dashboards and data exploration.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.qlik.com/us/products/qlik-sense" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Analytics &amp; Reporting" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.clicdata.com&sz=64" alt="ClicData logo"></td>
+      <td><span class="business">Analytics &amp; Reporting</span></td>
+      <td>BI / Dashboard</td>
+      <td><strong>ClicData</strong></td>
+      <td>Cloud business intelligence platform for dashboards, reports, and data integration.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.clicdata.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Freemium">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=slack.com&sz=64" alt="Slack logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Collaboration Platform</td>
+      <td><strong>Slack</strong></td>
+      <td>Team messaging and collaboration platform used for channels, alerts, and workflow communication.</td>
+      <td><span class="badge freemium">Freemium</span></td>
+      <td>Cloud</td>
+      <td><a href="https://slack.com" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+    <tr data-business="Enterprise &amp; Internal Systems" data-license="Commercial">
+      <td><img class="logo" src="https://www.google.com/s2/favicons?domain=www.microsoft.com&sz=64" alt="Microsoft Teams logo"></td>
+      <td><span class="business">Enterprise &amp; Internal Systems</span></td>
+      <td>Collaboration Platform</td>
+      <td><strong>Microsoft Teams</strong></td>
+      <td>Microsoft 365 collaboration platform for chat, meetings, channels, and business communication.</td>
+      <td><span class="badge commercial">Commercial</span></td>
+      <td>Cloud</td>
+      <td><a href="https://www.microsoft.com/microsoft-teams" target="_blank" rel="noopener">Official website</a></td>
+    </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="note">
+    Source: Matomo integrations page. License and hosting classifications are practical business-level labels;
+    some third-party plugins/products may have multiple editions or changing licensing, so verify before procurement.
+  </p>
+</main>
+<script>
+const search = document.getElementById('search');
+const businessFilter = document.getElementById('businessFilter');
+const licenseFilter = document.getElementById('licenseFilter');
+const rows = Array.from(document.querySelectorAll('#catalog tbody tr'));
+
+function filterRows() {
+  const q = search.value.toLowerCase().trim();
+  const b = businessFilter.value;
+  const l = licenseFilter.value;
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    const matchQ = !q || text.includes(q);
+    const matchB = !b || row.dataset.business === b;
+    const matchL = !l || row.dataset.license === l;
+    row.style.display = (matchQ && matchB && matchL) ? '' : 'none';
+  });
+}
+
+search.addEventListener('input', filterRows);
+businessFilter.addEventListener('change', filterRows);
+licenseFilter.addEventListener('change', filterRows);
+</script>
+</body>
+</html>
