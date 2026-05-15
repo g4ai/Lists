@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>50 Useful Websites Grouped by Subject</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --border: #e5e7eb;
+      --warning-bg: #fff7ed;
+      --warning-border: #fdba74;
+      --warning-text: #9a3412;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Tahoma, Arial, sans-serif;
+      background: radial-gradient(circle at top left, #dbeafe 0, transparent 35%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 56px 22px 34px;
+      text-align: center;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      border-bottom-left-radius: 36px;
+      border-bottom-right-radius: 36px;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: -1.5px;
+    }
+
+    header p {
+      max-width: 760px;
+      margin: 16px auto 0;
+      color: #dbeafe;
+      font-size: 1.08rem;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 32px auto 60px;
+    }
+
+    .notice {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: var(--warning-text);
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+      box-shadow: 0 8px 22px rgba(154, 52, 18, 0.08);
+    }
+
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 34px;
+    }
+
+    .toc a {
+      text-decoration: none;
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid var(--border);
+      padding: 9px 13px;
+      border-radius: 999px;
+      font-weight: 650;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+      transition: 0.18s ease;
+    }
+
+    .toc a:hover {
+      transform: translateY(-2px);
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    section {
+      margin: 38px 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 1.55rem;
+      letter-spacing: -0.4px;
+    }
+
+    .badge {
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: #bfdbfe;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .category {
+      background: #f3f4f6;
+      color: #374151;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .visit {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .visit:hover { color: var(--primary-dark); }
+
+    .sensitive {
+      border-color: #fed7aa;
+      background: linear-gradient(180deg, #fff, #fff7ed);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px 16px 40px;
+    }
+
+    @media print {
+      body { background: white; }
+      header { box-shadow: none; border-radius: 0; }
+      .card { box-shadow: none; break-inside: avoid; }
+      .toc { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>50 Useful Websites</h1>
+    <p>A clean, grouped directory of useful websites for learning, research, design, coding, security, productivity, and internet utilities.</p>
+  </header>
+
+  <main class="container">
+    <div class="notice">
+      <strong>Important note:</strong> Some websites, especially paywall-bypass or academic-paper access sites, may raise legal, copyright, or policy concerns depending on your country and organization. Use them responsibly and follow applicable rules.
+    </div>
+
+    <nav class="toc" aria-label="Page sections">
+      <a href="#learning">📚 Learning & Research</a>
+      <a href="#design">🎨 Design & Media</a>
+      <a href="#dev">💻 Developer Tools</a>
+      <a href="#security">🔐 Security & Privacy</a>
+      <a href="#internet">🌐 Internet Utilities</a>
+      <a href="#audio">🎵 Audio & Focus</a>
+      <a href="#docs">📄 PDF & Documents</a>
+      <a href="#ai">🤖 AI Tools</a>
+    </nav>
+
+    <section id="learning">
+      <div class="section-title"><h2>📚 Learning, Books & Research</h2><span class="badge">11 sites</span></div>
+      <div class="grid">
+        <article class="card sensitive"><div><h3>Library Genesis</h3><p>Large online collection of books, textbooks, and academic materials.</p></div><div class="meta"><span class="category">Digital Library</span><a class="visit" href="https://libgen.is" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card sensitive"><div><h3>Sci-Hub</h3><p>Provides access to research papers; legal status varies by jurisdiction.</p></div><div class="meta"><span class="category">Academic Papers</span><a class="visit" href="https://sci-hub.se" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Project Gutenberg</h3><p>Free classic books and public-domain literature.</p></div><div class="meta"><span class="category">Free eBooks</span><a class="visit" href="https://www.gutenberg.org" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>PDF Drive</h3><p>Search engine for PDF documents and books.</p></div><div class="meta"><span class="category">PDF Library</span><a class="visit" href="https://www.pdfdrive.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Open Culture</h3><p>Free courses, movies, audiobooks, and educational resources.</p></div><div class="meta"><span class="category">Online Learning</span><a class="visit" href="https://www.openculture.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>WolframAlpha</h3><p>Computational knowledge engine for math, science, and data questions.</p></div><div class="meta"><span class="category">Math & Science</span><a class="visit" href="https://www.wolframalpha.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Elicit</h3><p>AI assistant for finding and analyzing academic papers.</p></div><div class="meta"><span class="category">AI Research</span><a class="visit" href="https://elicit.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Consensus</h3><p>Search engine focused on scientific evidence and research findings.</p></div><div class="meta"><span class="category">Science Search</span><a class="visit" href="https://consensus.app" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Connected Papers</h3><p>Visual maps showing relationships between research papers.</p></div><div class="meta"><span class="category">Research Map</span><a class="visit" href="https://www.connectedpapers.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Semantic Scholar</h3><p>Free academic search engine for scientific literature.</p></div><div class="meta"><span class="category">Academic Search</span><a class="visit" href="https://www.semanticscholar.org" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>SciSpace</h3><p>AI tool to understand, summarize, and explore research papers.</p></div><div class="meta"><span class="category">Paper Assistant</span><a class="visit" href="https://typeset.io" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="design">
+      <div class="section-title"><h2>🎨 Design, Images & Mockups</h2><span class="badge">8 sites</span></div>
+      <div class="grid">
+        <article class="card"><div><h3>Photopea</h3><p>Advanced image editor similar to Photoshop, directly in the browser.</p></div><div class="meta"><span class="category">Image Editing</span><a class="visit" href="https://www.photopea.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Squoosh</h3><p>Compress and optimize images with simple controls.</p></div><div class="meta"><span class="category">Optimization</span><a class="visit" href="https://squoosh.app" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Remove.bg</h3><p>Automatically remove image backgrounds.</p></div><div class="meta"><span class="category">AI Editing</span><a class="visit" href="https://www.remove.bg" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Cleanup.pictures</h3><p>Remove unwanted objects, defects, or people from photos.</p></div><div class="meta"><span class="category">Photo Cleanup</span><a class="visit" href="https://cleanup.pictures" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Unscreen</h3><p>Remove video backgrounds automatically.</p></div><div class="meta"><span class="category">Video Editing</span><a class="visit" href="https://www.unscreen.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Shots.so</h3><p>Create clean product screenshots and mockups.</p></div><div class="meta"><span class="category">Mockups</span><a class="visit" href="https://shots.so" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Smartmockups</h3><p>Create device and branding mockups without Photoshop.</p></div><div class="meta"><span class="category">Mockups</span><a class="visit" href="https://smartmockups.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>TinEye</h3><p>Reverse image search to find where an image appears online.</p></div><div class="meta"><span class="category">Image Search</span><a class="visit" href="https://tineye.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="dev">
+      <div class="section-title"><h2>💻 Developer & Coding Tools</h2><span class="badge">7 sites</span></div>
+      <div class="grid">
+        <article class="card"><div><h3>Carbon</h3><p>Turn code snippets into beautiful shareable images.</p></div><div class="meta"><span class="category">Code Images</span><a class="visit" href="https://carbon.now.sh" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Ray.so</h3><p>Create attractive screenshots of code snippets.</p></div><div class="meta"><span class="category">Code Design</span><a class="visit" href="https://ray.so" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Phind</h3><p>AI search and answer engine for developers.</p></div><div class="meta"><span class="category">AI Coding</span><a class="visit" href="https://www.phind.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Regex101</h3><p>Build, test, and explain regular expressions.</p></div><div class="meta"><span class="category">Regex</span><a class="visit" href="https://regex101.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Code Beautify</h3><p>Format, beautify, and validate code and data.</p></div><div class="meta"><span class="category">Formatting</span><a class="visit" href="https://codebeautify.org" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>JSON Formatter</h3><p>Format and inspect JSON in a readable way.</p></div><div class="meta"><span class="category">JSON</span><a class="visit" href="https://jsonformatter.org" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>ExplainShell</h3><p>Break down and explain Linux shell commands.</p></div><div class="meta"><span class="category">Linux</span><a class="visit" href="https://explainshell.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="security">
+      <div class="section-title"><h2>🔐 Privacy, Security & Temporary Sharing</h2><span class="badge">6 sites</span></div>
+      <div class="grid">
+        <article class="card"><div><h3>Have I Been Pwned</h3><p>Check whether your email or password appeared in a data breach.</p></div><div class="meta"><span class="category">Breach Check</span><a class="visit" href="https://haveibeenpwned.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>VirusTotal</h3><p>Scan files, hashes, domains, and URLs for malware indicators.</p></div><div class="meta"><span class="category">Malware Scan</span><a class="visit" href="https://www.virustotal.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Privnote</h3><p>Create notes that self-destruct after being read.</p></div><div class="meta"><span class="category">Private Notes</span><a class="visit" href="https://privnote.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Temp Mail</h3><p>Generate temporary disposable email addresses.</p></div><div class="meta"><span class="category">Temp Email</span><a class="visit" href="https://temp-mail.org" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>10 Minute Mail</h3><p>Temporary email inbox that expires quickly.</p></div><div class="meta"><span class="category">Temp Email</span><a class="visit" href="https://10minutemail.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>File.io</h3><p>Share files that can automatically delete after download or expiry.</p></div><div class="meta"><span class="category">File Sharing</span><a class="visit" href="https://www.file.io" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="internet">
+      <div class="section-title"><h2>🌐 Internet Utilities & Discovery</h2><span class="badge">9 sites</span></div>
+      <div class="grid">
+        <article class="card sensitive"><div><h3>12ft.io</h3><p>Attempts to view simplified pages and bypass some paywalls.</p></div><div class="meta"><span class="category">Web Utility</span><a class="visit" href="https://12ft.io" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Internet Archive</h3><p>Digital archive of websites, books, software, audio, and video.</p></div><div class="meta"><span class="category">Digital Archive</span><a class="visit" href="https://archive.org" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Archive.ph</h3><p>Save and view webpage snapshots.</p></div><div class="meta"><span class="category">Web Archive</span><a class="visit" href="https://archive.ph" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>AlternativeTo</h3><p>Find alternatives to apps, websites, and software products.</p></div><div class="meta"><span class="category">Alternatives</span><a class="visit" href="https://alternativeto.net" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>SimilarSites</h3><p>Discover websites similar to a site you already know.</p></div><div class="meta"><span class="category">Discovery</span><a class="visit" href="https://www.similarsites.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>JustWatch</h3><p>Find where movies and TV shows are available to stream.</p></div><div class="meta"><span class="category">Streaming Search</span><a class="visit" href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>DownDetector</h3><p>Check whether websites and online services are having outages.</p></div><div class="meta"><span class="category">Status Check</span><a class="visit" href="https://downdetector.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Fast.com</h3><p>Simple internet speed test by Netflix.</p></div><div class="meta"><span class="category">Speed Test</span><a class="visit" href="https://fast.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Raindrop.io</h3><p>Bookmark manager for saving, organizing, and searching links.</p></div><div class="meta"><span class="category">Bookmarks</span><a class="visit" href="https://raindrop.io" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="audio">
+      <div class="section-title"><h2>🎵 Music, Audio & Focus</h2><span class="badge">6 sites</span></div>
+      <div class="grid">
+        <article class="card"><div><h3>Radio Garden</h3><p>Listen to live radio stations from around the world.</p></div><div class="meta"><span class="category">Online Radio</span><a class="visit" href="https://radio.garden" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Every Noise at Once</h3><p>Explore thousands of music genres visually.</p></div><div class="meta"><span class="category">Music Discovery</span><a class="visit" href="https://everynoise.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>TuneFind</h3><p>Find songs used in movies and TV shows.</p></div><div class="meta"><span class="category">Soundtracks</span><a class="visit" href="https://www.tunefind.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Music for Programming</h3><p>Curated music mixes designed for concentration and coding.</p></div><div class="meta"><span class="category">Focus Music</span><a class="visit" href="https://musicforprogramming.net" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>myNoise</h3><p>Customizable ambient soundscapes and noise generators.</p></div><div class="meta"><span class="category">Soundscapes</span><a class="visit" href="https://mynoise.net" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>Coffitivity</h3><p>Café background sounds for focus and productivity.</p></div><div class="meta"><span class="category">Focus Audio</span><a class="visit" href="https://coffitivity.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="docs">
+      <div class="section-title"><h2>📄 PDF & Document Tools</h2><span class="badge">2 sites</span></div>
+      <div class="grid">
+        <article class="card"><div><h3>Smallpdf</h3><p>Edit, convert, compress, and manage PDF files.</p></div><div class="meta"><span class="category">PDF Tools</span><a class="visit" href="https://smallpdf.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+        <article class="card"><div><h3>iLovePDF</h3><p>Merge, split, compress, convert, and edit PDFs.</p></div><div class="meta"><span class="category">PDF Tools</span><a class="visit" href="https://www.ilovepdf.com" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+
+    <section id="ai">
+      <div class="section-title"><h2>🤖 AI Summaries & Content Tools</h2><span class="badge">1 site</span></div>
+      <div class="grid">
+        <article class="card"><div><h3>Summarize.tech</h3><p>Summarize YouTube videos using AI.</p></div><div class="meta"><span class="category">AI Summary</span><a class="visit" href="https://www.summarize.tech" target="_blank" rel="noopener noreferrer">Visit →</a></div></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Created as a clean grouped directory. Links open in a new tab.
+  </footer>
+</body>
+</html>
