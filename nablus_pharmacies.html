@@ -1,0 +1,1650 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>دليل صيدليات نابلس التفاعلي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQfRChMYf/5AT0uzFSxq4b3m6K5wLw=" crossorigin="" />
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --maroon: #8a1538;
+      --maroon-2: #a61c46;
+      --gold: #a9853b;
+      --green: #15803d;
+      --orange: #b45309;
+      --blue: #1d4ed8;
+      --shadow: 0 18px 45px rgba(31,41,55,.08);
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:'Tajawal', system-ui, -apple-system, Segoe UI, Arial, sans-serif; }
+    header { background: linear-gradient(135deg, var(--maroon), #65102a); color:#fff; padding: 28px 22px 34px; position:relative; overflow:hidden; }
+    header::after { content:""; position:absolute; inset:auto -80px -80px auto; width:260px; height:260px; border-radius:50%; background:rgba(169,133,59,.25); }
+    .wrap { max-width: 1280px; margin: 0 auto; }
+    .titlebar { display:flex; gap:18px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; position:relative; z-index:1; }
+    h1 { margin:0 0 8px; font-size: clamp(26px, 4vw, 44px); font-weight:800; }
+    .subtitle { margin:0; max-width:900px; line-height:1.8; color:#f9e7ee; }
+    .badge { display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.1); padding:10px 12px; border-radius:999px; white-space:nowrap; }
+    main { padding: 22px; }
+    .notice { background:#fff8e6; border:1px solid #f0d58b; color:#5f4500; padding:14px 16px; border-radius:18px; line-height:1.8; margin-top:-34px; position:relative; z-index:2; box-shadow:var(--shadow); }
+    .grid { display:grid; grid-template-columns: 1.25fr .75fr; gap:18px; margin-top:18px; }
+    @media (max-width: 960px) { .grid { grid-template-columns:1fr; } }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); }
+    .card .head { padding:16px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .card .body { padding:18px; }
+    .kpis { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:12px; margin:18px 0; }
+    @media (max-width: 760px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .kpi { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; box-shadow:0 10px 30px rgba(31,41,55,.05); }
+    .kpi span { display:block; color:var(--muted); font-size:13px; }
+    .kpi strong { display:block; font-size:28px; margin-top:4px; color:var(--maroon); }
+    .toolbar { display:grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap:10px; }
+    @media (max-width: 980px) { .toolbar { grid-template-columns:1fr 1fr; } }
+    @media (max-width: 560px) { .toolbar { grid-template-columns:1fr; } }
+    input, select, button { font:inherit; border:1px solid var(--line); border-radius:14px; padding:12px 13px; background:#fff; color:var(--ink); outline:none; }
+    input:focus, select:focus { border-color:var(--maroon); box-shadow:0 0 0 3px rgba(138,21,56,.12); }
+    button { cursor:pointer; border-color:transparent; background:var(--maroon); color:#fff; font-weight:700; transition:.2s ease; }
+    button:hover { background:var(--maroon-2); transform:translateY(-1px); }
+    .btn-secondary { background:#fff; color:var(--maroon); border-color:#ead3dc; }
+    .btn-secondary:hover { background:#fff5f8; }
+    .btn-gold { background:var(--gold); }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .chip { border:1px solid var(--line); background:#fff; padding:8px 10px; border-radius:999px; color:var(--muted); font-size:13px; }
+    #map { height: 560px; min-height: 360px; border-radius:0 0 22px 22px; }
+    .table-wrap { overflow:auto; border-radius:18px; border:1px solid var(--line); }
+    table { width:100%; border-collapse: collapse; min-width: 1180px; background:#fff; }
+    th, td { padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:top; text-align:right; }
+    th { position:sticky; top:0; z-index:5; background:#fafafa; color:#374151; font-weight:800; }
+    tr:hover td { background:#fcf7f9; }
+    .pharmacy { font-weight:800; color:var(--maroon); }
+    .muted { color:var(--muted); }
+    .quality { display:inline-flex; border-radius:999px; padding:5px 9px; font-size:12px; background:#fff7ed; color:#9a3412; border:1px solid #fed7aa; white-space:nowrap; }
+    .links { display:flex; gap:6px; flex-wrap:wrap; }
+    .linkbtn { text-decoration:none; color:var(--maroon); border:1px solid #ead3dc; background:#fff; border-radius:999px; padding:6px 9px; font-size:12px; white-space:nowrap; }
+    .linkbtn:hover { background:#fff5f8; }
+    .distance { color:var(--green); font-weight:800; }
+    .empty { padding:28px; text-align:center; color:var(--muted); }
+    .footer-note { color:var(--muted); line-height:1.8; font-size:13px; padding:18px 0 6px; }
+    .mini { font-size:12px; color:var(--muted); }
+    .legend { display:flex; gap:8px; flex-wrap:wrap; }
+    .legend span { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:13px; }
+    .dot { width:10px; height:10px; border-radius:999px; background:var(--maroon); display:inline-block; }
+    .data-note { background:#f9fafb; border:1px dashed #d1d5db; padding:12px; border-radius:16px; line-height:1.8; margin-top:12px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap titlebar">
+    <div>
+      <h1>دليل صيدليات نابلس التفاعلي</h1>
+      <p class="subtitle">بحث وفلترة وخريطة وفرز حسب الأقرب. البيانات الأساسية مأخوذة من القائمة العامة للصيدليات، مع إضافة إحداثيات تقريبية حسب المنطقة لتشغيل الخريطة وخاصية الأقرب.</p>
+    </div>
+    <div class="badge">💊 <strong>نسخة عمل قابلة للتحديث</strong></div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="notice">
+    <strong>تنبيه مهم:</strong> المصدر العام يوفّر: اسم الصيدلية، العنوان، هاتف الصيدلية، الجوال، والصيدلي المسؤول. لا يوفّر بشكل موثوق: مالك الصيدلية، روابط فيسبوك/إنستغرام، أو إحداثيات GPS دقيقة؛ لذلك تظهر هذه الحقول كـ “غير متاح” أو روابط بحث/واتساب محتملة، وليست صفحات رسمية مؤكدة.
+  </div>
+
+  <section class="kpis">
+    <div class="kpi"><span>عدد السجلات في هذه النسخة</span><strong id="kpiTotal">0</strong></div>
+    <div class="kpi"><span>المناطق/الشوارع</span><strong id="kpiAreas">0</strong></div>
+    <div class="kpi"><span>سجلات بها جوال</span><strong id="kpiMobile">0</strong></div>
+    <div class="kpi"><span>إحداثيات الخريطة</span><strong>تقريبية</strong></div>
+  </section>
+
+  <section class="card">
+    <div class="head">
+      <div>
+        <strong>البحث والفلترة</strong>
+        <div class="mini">يمكن البحث باسم الصيدلية، المنطقة، الشارع، الهاتف، أو الصيدلي المسؤول.</div>
+      </div>
+      <div class="legend"><span><i class="dot"></i> نقطة تقريبية على الخريطة</span></div>
+    </div>
+    <div class="body">
+      <div class="toolbar">
+        <input id="search" placeholder="ابحث: رفيديا، شارع الجامعة، شرف، 237..." />
+        <select id="areaFilter"><option value="">كل المناطق</option></select>
+        <select id="sortBy">
+          <option value="name">ترتيب بالاسم</option>
+          <option value="area">ترتيب بالمنطقة</option>
+          <option value="distance">الأقرب أولاً</option>
+        </select>
+        <select id="mobileFilter">
+          <option value="">كل السجلات</option>
+          <option value="hasMobile">بها جوال/واتساب محتمل</option>
+          <option value="hasPhone">بها هاتف ثابت</option>
+        </select>
+        <button id="locate" class="btn-gold">📍 أقرب صيدلية</button>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div id="locationStatus" class="data-note" style="display:none"></div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="head">
+        <div><strong>القائمة</strong><div class="mini"><span id="countText">0</span> نتيجة حسب الفلتر الحالي</div></div>
+        <div class="links">
+          <button id="exportCsv" class="btn-secondary">تنزيل CSV</button>
+          <button id="reset" class="btn-secondary">إعادة ضبط</button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>الصيدلية</th>
+                <th>المنطقة</th>
+                <th>الشارع/العنوان</th>
+                <th>الهاتف</th>
+                <th>الجوال / واتساب</th>
+                <th>الصيدلي المسؤول</th>
+                <th>صاحب الصيدلية</th>
+                <th>الخريطة / السوشال</th>
+                <th>ملاحظة الموقع</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div id="empty" class="empty" style="display:none">لا توجد نتائج مطابقة.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head"><strong>الخريطة</strong><span class="mini">OpenStreetMap + Leaflet</span></div>
+      <div id="map"></div>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    للاستخدام الرسمي أو النشر العام، يفضّل مطابقة هذه القائمة مع سجل نقابة الصيادلة/وزارة الصحة، ثم إضافة إحداثيات GPS دقيقة وروابط التواصل المعتمدة من كل صيدلية. زر واتساب مبني من رقم الجوال المتاح وقد لا يكون مفعّلًا لدى الصيدلية.
+  </p>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const PHARMACIES = [
+  {
+    "name": "صيدلية المعتصم بلس",
+    "area": "الجبل الشمالي",
+    "street": "شارع طارق بن زياد",
+    "phone": "0562200005",
+    "mobile": "0599333534",
+    "pharmacist": "جاني جبر احميدان أبو جوخة",
+    "address": "نابلس - شارع طارق بن زياد - منطقة الجبل الشمالي",
+    "source": "PPA search snippet",
+    "id": 1,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2287,
+    "lng": 35.2575,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599333534",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية العودة",
+    "area": "السوق الشرقي",
+    "street": "السوق الشرقي",
+    "phone": "2371667",
+    "mobile": "0595260127",
+    "pharmacist": "معاوية درويش قاسم الشكعة",
+    "address": "نابلس - السوق الشرقي",
+    "source": "PPA",
+    "id": 2,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.221,
+    "lng": 35.2645,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D9%88%D8%AF%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D9%88%D8%AF%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D9%88%D8%AF%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D9%88%D8%AF%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970595260127",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية مجدي",
+    "area": "السوق الشرقي",
+    "street": "السوق الشرقي",
+    "phone": "2376524",
+    "mobile": "0599473273",
+    "pharmacist": "نضال محمد فارس شماس",
+    "address": "السوق الشرقي",
+    "source": "PPA",
+    "id": 3,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.221,
+    "lng": 35.2645,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%85%D8%AC%D8%AF%D9%8A+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%85%D8%AC%D8%AF%D9%8A+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%85%D8%AC%D8%AF%D9%8A+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%85%D8%AC%D8%AF%D9%8A+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599473273",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية بلسم",
+    "area": "المجمع الغربي",
+    "street": "مقابل المجمع الغربي",
+    "phone": "09-2335122",
+    "mobile": "0569499500",
+    "pharmacist": "وضاح صدقي رضا قناديلو",
+    "address": "مقابل المجمع الغربي",
+    "source": "PPA",
+    "id": 4,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2224,
+    "lng": 35.2438,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970569499500",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الشهيد نائل الشخشير",
+    "area": "المخفية",
+    "street": "المخفية",
+    "phone": "2345803",
+    "mobile": "0599371291",
+    "pharmacist": "تهاني محمد عمر عبد القادر الشخشير",
+    "address": "المخفية",
+    "source": "PPA search snippet",
+    "id": 5,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2244,
+    "lng": 35.247,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D9%87%D9%8A%D8%AF+%D9%86%D8%A7%D8%A6%D9%84+%D8%A7%D9%84%D8%B4%D8%AE%D8%B4%D9%8A%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D9%87%D9%8A%D8%AF+%D9%86%D8%A7%D8%A6%D9%84+%D8%A7%D9%84%D8%B4%D8%AE%D8%B4%D9%8A%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D9%87%D9%8A%D8%AF+%D9%86%D8%A7%D8%A6%D9%84+%D8%A7%D9%84%D8%B4%D8%AE%D8%B4%D9%8A%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D9%87%D9%8A%D8%AF+%D9%86%D8%A7%D8%A6%D9%84+%D8%A7%D9%84%D8%B4%D8%AE%D8%B4%D9%8A%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599371291",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية المخفية الجديدة",
+    "area": "المخفية",
+    "street": "المخفية",
+    "phone": "09-2343250",
+    "mobile": "0597343414",
+    "pharmacist": "محمد جميل أحمد الدلق",
+    "address": "المخفية",
+    "source": "PPA",
+    "id": 6,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2244,
+    "lng": 35.247,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%A7%D9%84%D9%85%D8%AE%D9%81%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597343414",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية أماندا",
+    "area": "المساكن الشعبية",
+    "street": "المساكن الشعبية - الشارع الرئيسي",
+    "phone": "09-2311607",
+    "mobile": "0595140075",
+    "pharmacist": "رشاد مصطفى رشيد أبو هنطش",
+    "address": "نابلس - المساكن الشعبية - الشارع الرئيسي",
+    "source": "PPA",
+    "id": 7,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2224,
+    "lng": 35.282,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%85%D8%A7%D9%86%D8%AF%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%A7%D9%84%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%85%D8%A7%D9%86%D8%AF%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%A7%D9%84%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%85%D8%A7%D9%86%D8%AF%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%A7%D9%84%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%85%D8%A7%D9%86%D8%AF%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%A7%D9%84%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970595140075",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية عنان",
+    "area": "المساكن الشعبية",
+    "street": "شارع المياه",
+    "phone": "2326322",
+    "mobile": "0599822322",
+    "pharmacist": "عنان حلمي أحمد عبد العزيز",
+    "address": "نابلس - المساكن الشعبية - شارع المياه",
+    "source": "PPA",
+    "id": 8,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2224,
+    "lng": 35.282,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B9%D9%86%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D9%8A%D8%A7%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B9%D9%86%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D9%8A%D8%A7%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B9%D9%86%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D9%8A%D8%A7%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B9%D9%86%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%83%D9%86+%D8%A7%D9%84%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D9%8A%D8%A7%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599822322",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية بلاطة",
+    "area": "بلاطة",
+    "street": "بلاطة",
+    "phone": "2324103",
+    "mobile": "0599760411",
+    "pharmacist": "عمار عمر خضير رامية",
+    "address": "نابلس / بلاطة",
+    "source": "PPA",
+    "id": 9,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.213,
+    "lng": 35.2799,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%2F+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%2F+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%2F+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%2F+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599760411",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية فهمي",
+    "area": "حدائق جمال عبد الناصر",
+    "street": "مقابل حدائق جمال عبد الناصر",
+    "phone": "2335321",
+    "mobile": "0599123827",
+    "pharmacist": "فهمي عبد العزيز عبد المجيد السركجي",
+    "address": "نابلس - مقابل حدائق جمال عبد الناصر",
+    "source": "PPA",
+    "id": 10,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2193,
+    "lng": 35.26,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%87%D9%85%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%AD%D8%AF%D8%A7%D8%A6%D9%82+%D8%AC%D9%85%D8%A7%D9%84+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%86%D8%A7%D8%B5%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%87%D9%85%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%AD%D8%AF%D8%A7%D8%A6%D9%82+%D8%AC%D9%85%D8%A7%D9%84+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%86%D8%A7%D8%B5%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%87%D9%85%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%AD%D8%AF%D8%A7%D8%A6%D9%82+%D8%AC%D9%85%D8%A7%D9%84+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%86%D8%A7%D8%B5%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%87%D9%85%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%AD%D8%AF%D8%A7%D8%A6%D9%82+%D8%AC%D9%85%D8%A7%D9%84+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%86%D8%A7%D8%B5%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599123827",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الرشيد",
+    "area": "حي العامرية",
+    "street": "حي العامرية",
+    "phone": "09-2340583",
+    "mobile": "0599249709",
+    "pharmacist": "رنا داود عبد الله أبو سمرة",
+    "address": "حي العامرية",
+    "source": "PPA",
+    "id": 11,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.225,
+    "lng": 35.251,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599249709",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية أصلان",
+    "area": "دوار الشهداء",
+    "street": "دوار الشهداء",
+    "phone": "2374601",
+    "mobile": "0599354317",
+    "pharmacist": "قيس ياسر زكي أصلان",
+    "address": "دوار الشهداء",
+    "source": "PPA",
+    "id": 12,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2212,
+    "lng": 35.2621,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D8%B5%D9%84%D8%A7%D9%86+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D8%B5%D9%84%D8%A7%D9%86+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D8%B5%D9%84%D8%A7%D9%86+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D8%B5%D9%84%D8%A7%D9%86+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599354317",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية العالول",
+    "area": "دوار الشهداء",
+    "street": "دوار الشهداء",
+    "phone": "09-2385342",
+    "mobile": "0598419896",
+    "pharmacist": "رمز مهند إبراهيم عكوبة",
+    "address": "دوار الشهداء - نابلس",
+    "source": "PPA",
+    "id": 13,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2212,
+    "lng": 35.2621,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%88%D9%84+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%88%D9%84+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%88%D9%84+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%88%D9%84+%D8%AF%D9%88%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970598419896",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية شرف 2",
+    "area": "رأس العين",
+    "street": "شارع رأس العين",
+    "phone": "09-2376443",
+    "mobile": "0598878190",
+    "pharmacist": "معن صبيح محمد شرف",
+    "address": "نابلس - شارع رأس العين",
+    "source": "PPA",
+    "id": 14,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2234,
+    "lng": 35.2525,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+2+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B1%D8%A3%D8%B3+%D8%A7%D9%84%D8%B9%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+2+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B1%D8%A3%D8%B3+%D8%A7%D9%84%D8%B9%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+2+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B1%D8%A3%D8%B3+%D8%A7%D9%84%D8%B9%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+2+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B1%D8%A3%D8%B3+%D8%A7%D9%84%D8%B9%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970598878190",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الزامل",
+    "area": "رفيديا",
+    "street": "رفيديا - الأكاديمية",
+    "phone": "09-2349365",
+    "mobile": "0595779400",
+    "pharmacist": "رؤى مرفق رفيق زامل",
+    "address": "رفيديا - الأكاديمية",
+    "source": "PPA",
+    "id": 15,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D8%A7%D9%85%D9%84+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D8%A7%D9%85%D9%84+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D8%A7%D9%85%D9%84+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D8%A7%D9%85%D9%84+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970595779400",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية المعتصم",
+    "area": "رفيديا",
+    "street": "مقابل مستشفى رفيديا",
+    "phone": "2344249",
+    "mobile": "0599333534",
+    "pharmacist": "هيا معتصم إبراهيم استيتية",
+    "address": "رفيديا - مقابل مستشفى رفيديا",
+    "source": "PPA",
+    "id": 16,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599333534",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية رفيديا",
+    "area": "رفيديا",
+    "street": "رفيديا",
+    "phone": "09-2341864",
+    "mobile": "0569808074",
+    "pharmacist": "نسرين صلاح الدين موسى الحنش",
+    "address": "رفيديا",
+    "source": "PPA",
+    "id": 17,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970569808074",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية سالم",
+    "area": "رفيديا",
+    "street": "رفيديا - شارع تونس",
+    "phone": "0569404949",
+    "mobile": "0598522112",
+    "pharmacist": "حازم محمد حسن سالم",
+    "address": "نابلس - رفيديا - شارع تونس",
+    "source": "PPA",
+    "id": 18,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970598522112",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية فواز",
+    "area": "رفيديا",
+    "street": "رفيديا",
+    "phone": "09-2339945",
+    "mobile": "0598999320",
+    "pharmacist": "فواز ربحي أحمد حج حمد",
+    "address": "رفيديا - نابلس",
+    "source": "PPA",
+    "id": 19,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%88%D8%A7%D8%B2+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%88%D8%A7%D8%B2+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%88%D8%A7%D8%B2+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%88%D8%A7%D8%B2+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970598999320",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية قادري الجديدة",
+    "area": "رفيديا",
+    "street": "رفيديا",
+    "phone": "2374322",
+    "mobile": "0597380227",
+    "pharmacist": "صائل عبد الرحمن قادري",
+    "address": "رفيديا",
+    "source": "PPA",
+    "id": 20,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%82%D8%A7%D8%AF%D8%B1%D9%8A+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%82%D8%A7%D8%AF%D8%B1%D9%8A+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%82%D8%A7%D8%AF%D8%B1%D9%8A+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%82%D8%A7%D8%AF%D8%B1%D9%8A+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597380227",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية ليان",
+    "area": "رفيديا",
+    "street": "رفيديا",
+    "phone": "2344572",
+    "mobile": "0599098767",
+    "pharmacist": "خالد جمال درويش قدح",
+    "address": "نابلس - رفيديا",
+    "source": "PPA",
+    "id": 21,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599098767",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية نغم",
+    "area": "رفيديا",
+    "street": "بلدة رفيديا",
+    "phone": "2345667",
+    "mobile": "0599047518",
+    "pharmacist": "روان سمير ساري خليل",
+    "address": "بلدة رفيديا",
+    "source": "PPA",
+    "id": 22,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2242,
+    "lng": 35.2346,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599047518",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الزهراء",
+    "area": "شارع الجاحظ",
+    "street": "شارع الجاحظ",
+    "phone": "09-2375304",
+    "mobile": "0597447557",
+    "pharmacist": "أنسام عبد الرحمن محمد مغربي",
+    "address": "شارع الجاحظ",
+    "source": "PPA",
+    "id": 23,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2204,
+    "lng": 35.2516,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D8%AD%D8%B8+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D8%AD%D8%B8+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D8%AD%D8%B8+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D8%AD%D8%B8+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597447557",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الجامعة",
+    "area": "شارع الجامعة",
+    "street": "شارع الجامعة",
+    "phone": "2341548",
+    "mobile": "0599888432",
+    "pharmacist": "ياسمين نهاد شكري المصري",
+    "address": "شارع الجامعة",
+    "source": "PPA",
+    "id": 24,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2256,
+    "lng": 35.2382,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599888432",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الفيحاء",
+    "area": "شارع الجامعة",
+    "street": "شارع الجامعة",
+    "phone": "2341391",
+    "mobile": "0599318495",
+    "pharmacist": "فيحاء عزت محمود الزربا",
+    "address": "نابلس - شارع الجامعة",
+    "source": "PPA",
+    "id": 25,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2256,
+    "lng": 35.2382,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599318495",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية المصري",
+    "area": "شارع الجامعة",
+    "street": "شارع الجامعة",
+    "phone": "2388597",
+    "mobile": "0599642571",
+    "pharmacist": "هدى حسان مدحت طهبوب",
+    "address": "شارع الجامعة",
+    "source": "PPA",
+    "id": 26,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2256,
+    "lng": 35.2382,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599642571",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية نور اليوسف",
+    "area": "شارع الجامعة",
+    "street": "شارع الجامعة",
+    "phone": "09-2373570",
+    "mobile": "0599280428",
+    "pharmacist": "نور يوسف عبد الرؤوف صابر",
+    "address": "شارع الجامعة",
+    "source": "PPA",
+    "id": 27,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2256,
+    "lng": 35.2382,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599280428",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الحنبلي",
+    "area": "شارع الساقية",
+    "street": "شارع الساقية",
+    "phone": "2389039",
+    "mobile": "0599252836",
+    "pharmacist": "آلاء حاتم رضا جرار",
+    "address": "نابلس - شارع الساقية",
+    "source": "PPA",
+    "id": 28,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2215,
+    "lng": 35.252,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%86%D8%A8%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D8%A7%D9%82%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%86%D8%A8%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D8%A7%D9%82%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%86%D8%A8%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D8%A7%D9%82%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AD%D9%86%D8%A8%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D8%A7%D9%82%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599252836",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية أوكسجين",
+    "area": "شارع تل",
+    "street": "شارع تل - قرب مسجد النور",
+    "phone": "2387759 / 2355451",
+    "mobile": "0599477466",
+    "pharmacist": "خالد سمير صادق قادري",
+    "address": "نابلس - شارع تل - قرب مسجد النور",
+    "source": "PPA",
+    "id": 29,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.221,
+    "lng": 35.25,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599477466",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية رياض فارم",
+    "area": "شارع تونس",
+    "street": "شارع تونس",
+    "phone": "09-2362222",
+    "mobile": "0597123551",
+    "pharmacist": "رهف نبيل محمد الزرعيني",
+    "address": "نابلس - شارع تونس",
+    "source": "PPA",
+    "id": 30,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2228,
+    "lng": 35.2398,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%8A%D8%A7%D8%B6+%D9%81%D8%A7%D8%B1%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%8A%D8%A7%D8%B6+%D9%81%D8%A7%D8%B1%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%8A%D8%A7%D8%B6+%D9%81%D8%A7%D8%B1%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B1%D9%8A%D8%A7%D8%B6+%D9%81%D8%A7%D8%B1%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597123551",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية فيتامين",
+    "area": "شارع جامعة النجاح",
+    "street": "شارع جامعة النجاح",
+    "phone": "09-2351570",
+    "mobile": "0569666455",
+    "pharmacist": "مصطفى يوسف نعمان دار الشيخ",
+    "address": "نابلس - شارع جامعة النجاح",
+    "source": "PPA",
+    "id": 31,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2256,
+    "lng": 35.2382,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%8A%D8%AA%D8%A7%D9%85%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%8A%D8%AA%D8%A7%D9%85%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%8A%D8%AA%D8%A7%D9%85%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D9%8A%D8%AA%D8%A7%D9%85%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970569666455",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية غازي",
+    "area": "شارع حيفا",
+    "street": "شارع حيفا",
+    "phone": "2373372",
+    "mobile": "0599899701",
+    "pharmacist": "ريم تيسير عبد الرحيم عرفات",
+    "address": "نابلس - شارع حيفا",
+    "source": "PPA",
+    "id": 32,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2262,
+    "lng": 35.249,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599899701",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية سفيان",
+    "area": "شارع سفيان",
+    "street": "شارع سفيان",
+    "phone": "2377441",
+    "mobile": "0597643225",
+    "pharmacist": "عبير سمير سليم البزرة",
+    "address": "نابلس - شارع سفيان",
+    "source": "PPA",
+    "id": 33,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2217,
+    "lng": 35.2585,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597643225",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية ابتسام سعيد",
+    "area": "شارع طولكرم / زواتا",
+    "street": "شارع طولكرم - مفرق زواتا الثاني",
+    "phone": "2354026",
+    "mobile": "0569334403",
+    "pharmacist": "ابتسام سعيد فؤاد حجي",
+    "address": "نابلس - شارع طولكرم - مفرق زواتا الثاني",
+    "source": "PPA",
+    "id": 34,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.233,
+    "lng": 35.238,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D8%AA%D8%B3%D8%A7%D9%85+%D8%B3%D8%B9%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D9%88%D9%84%D9%83%D8%B1%D9%85+-+%D9%85%D9%81%D8%B1%D9%82+%D8%B2%D9%88%D8%A7%D8%AA%D8%A7+%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D8%AA%D8%B3%D8%A7%D9%85+%D8%B3%D8%B9%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D9%88%D9%84%D9%83%D8%B1%D9%85+-+%D9%85%D9%81%D8%B1%D9%82+%D8%B2%D9%88%D8%A7%D8%AA%D8%A7+%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D8%AA%D8%B3%D8%A7%D9%85+%D8%B3%D8%B9%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D9%88%D9%84%D9%83%D8%B1%D9%85+-+%D9%85%D9%81%D8%B1%D9%82+%D8%B2%D9%88%D8%A7%D8%AA%D8%A7+%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D8%AA%D8%B3%D8%A7%D9%85+%D8%B3%D8%B9%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D9%88%D9%84%D9%83%D8%B1%D9%85+-+%D9%85%D9%81%D8%B1%D9%82+%D8%B2%D9%88%D8%A7%D8%AA%D8%A7+%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970569334403",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الغدير",
+    "area": "شارع عصيرة",
+    "street": "شارع عصيرة",
+    "phone": "2336725",
+    "mobile": "0599257015",
+    "pharmacist": "سمير تحسين عطا الله الشريف",
+    "address": "شارع عصيرة",
+    "source": "PPA",
+    "id": 35,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2295,
+    "lng": 35.238,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%BA%D8%AF%D9%8A%D8%B1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%BA%D8%AF%D9%8A%D8%B1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%BA%D8%AF%D9%8A%D8%B1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%BA%D8%AF%D9%8A%D8%B1+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599257015",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية هبة",
+    "area": "شارع عصيرة / مستشفى النجاح",
+    "street": "شارع عصيرة - بجانب مستشفى جامعة النجاح",
+    "phone": "2379476",
+    "mobile": "0597016433",
+    "pharmacist": "هبة محمد سليمان منصور",
+    "address": "نابلس - شارع عصيرة - بجانب مستشفى جامعة النجاح",
+    "source": "PPA",
+    "id": 36,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2285,
+    "lng": 35.2368,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597016433",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الشعار",
+    "area": "شارع عمان",
+    "street": "شارع عمان",
+    "phone": "09-2386523",
+    "mobile": "0599898123",
+    "pharmacist": "فواز محمد فتحي عبد الرحمن شعار",
+    "address": "نابلس - شارع عمان",
+    "source": "PPA",
+    "id": 37,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2192,
+    "lng": 35.274,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D8%B9%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D8%B9%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D8%B9%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B4%D8%B9%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599898123",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية العريض الجديدة",
+    "area": "شارع عمان",
+    "street": "شارع عمان",
+    "phone": "09-2372741",
+    "mobile": "0599240260",
+    "pharmacist": "إيهاب قاسم فؤاد طشطوش",
+    "address": "شارع عمان",
+    "source": "PPA",
+    "id": 38,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2192,
+    "lng": 35.274,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B1%D9%8A%D8%B6+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B1%D9%8A%D8%B6+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B1%D9%8A%D8%B6+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B1%D9%8A%D8%B6+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599240260",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية نوره",
+    "area": "شارع عمان",
+    "street": "شارع عمان",
+    "phone": "2379998",
+    "mobile": "0593464685",
+    "pharmacist": "نوره عبيد كامل شاهين",
+    "address": "نابلس - شارع عمان",
+    "source": "PPA",
+    "id": 39,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2192,
+    "lng": 35.274,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1%D9%87+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970593464685",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية ابن سينا",
+    "area": "شارع عمر المختار",
+    "street": "شارع عمر المختار",
+    "phone": "09-2376548",
+    "mobile": "0599257057",
+    "pharmacist": "رمزي فالح مصطفى أبو حجلة",
+    "address": "نابلس - شارع عمر المختار",
+    "source": "PPA",
+    "id": 40,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2211,
+    "lng": 35.2544,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599257057",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية انعام",
+    "area": "شارع غرناطة",
+    "street": "شارع غرناطة",
+    "phone": "",
+    "mobile": "0599886689",
+    "pharmacist": "عزت إبراهيم عزت الخششي",
+    "address": "نابلس - شارع غرناطة",
+    "source": "PPA",
+    "id": 41,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2238,
+    "lng": 35.2485,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%86%D8%B9%D8%A7%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%86%D8%B9%D8%A7%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%86%D8%B9%D8%A7%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%86%D8%B9%D8%A7%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599886689",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية خورشيد",
+    "area": "شارع غرناطة",
+    "street": "شارع غرناطة",
+    "phone": "09-2379450",
+    "mobile": "0597887188",
+    "pharmacist": "نور خورشيد بدري شخشير",
+    "address": "شارع غرناطة",
+    "source": "PPA",
+    "id": 42,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2238,
+    "lng": 35.2485,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597887188",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الوليد",
+    "area": "شارع فلسطين",
+    "street": "شارع فلسطين",
+    "phone": "2371252",
+    "mobile": "0599298849",
+    "pharmacist": "روند ياسر خيرو أبو غضيب",
+    "address": "شارع فلسطين",
+    "source": "PPA",
+    "id": 43,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2215,
+    "lng": 35.2573,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599298849",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية شرف",
+    "area": "شارع فلسطين",
+    "street": "شارع فلسطين",
+    "phone": "09-2376443",
+    "mobile": "0597974373",
+    "pharmacist": "صبيح محمد أسعد شرف",
+    "address": "نابلس - شارع فلسطين",
+    "source": "PPA",
+    "id": 44,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2215,
+    "lng": 35.2573,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B4%D8%B1%D9%81+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597974373",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية خلود",
+    "area": "شارع محمود عباس",
+    "street": "شارع محمود عباس",
+    "phone": "",
+    "mobile": "0595053862",
+    "pharmacist": "خلود فوزي أحمد أعرج",
+    "address": "نابلس - شارع محمود عباس",
+    "source": "PPA",
+    "id": 45,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.224,
+    "lng": 35.246,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970595053862",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية فادي",
+    "area": "طلعة أسو",
+    "street": "طلعة أسو",
+    "phone": "2385107",
+    "mobile": "0598200348",
+    "pharmacist": "فادي عدنان سليم سبع العيش",
+    "address": "طلعة أسو",
+    "source": "PPA",
+    "id": 46,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2196,
+    "lng": 35.2505,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D8%A7%D8%AF%D9%8A+%D8%B7%D9%84%D8%B9%D8%A9+%D8%A3%D8%B3%D9%88+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D8%A7%D8%AF%D9%8A+%D8%B7%D9%84%D8%B9%D8%A9+%D8%A3%D8%B3%D9%88+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D8%A7%D8%AF%D9%8A+%D8%B7%D9%84%D8%B9%D8%A9+%D8%A3%D8%B3%D9%88+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%81%D8%A7%D8%AF%D9%8A+%D8%B7%D9%84%D8%B9%D8%A9+%D8%A3%D8%B3%D9%88+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970598200348",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية أوكسجين - فرع/سجل آخر",
+    "area": "غير محدد",
+    "street": "غير محدد",
+    "phone": "09-2396845",
+    "mobile": "0567558843",
+    "pharmacist": "محمد أمجد راجح دراغمه",
+    "address": "نابلس",
+    "source": "PPA",
+    "id": 47,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2211,
+    "lng": 35.2544,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970567558843",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية جواد",
+    "area": "غير محدد",
+    "street": "غير محدد",
+    "phone": "2383290",
+    "mobile": "0599336058",
+    "pharmacist": "لبنى محمد جواد علي المصري",
+    "address": "نابلس",
+    "source": "PPA",
+    "id": 48,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2211,
+    "lng": 35.2544,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599336058",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية حسن",
+    "area": "غير محدد",
+    "street": "غير محدد",
+    "phone": "2374739",
+    "mobile": "0599776695",
+    "pharmacist": "عميد حسن عبد الرؤوف الشخشير",
+    "address": "نابلس",
+    "source": "PPA",
+    "id": 49,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2211,
+    "lng": 35.2544,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AD%D8%B3%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AD%D8%B3%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AD%D8%B3%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AD%D8%B3%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599776695",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية البدوي",
+    "area": "مخيم بلاطة",
+    "street": "مخيم بلاطة",
+    "phone": "09-2324873",
+    "mobile": "0599251381",
+    "pharmacist": "معتصم إبراهيم صالح سرحان",
+    "address": "مخيم بلاطة",
+    "source": "PPA",
+    "id": 50,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.213,
+    "lng": 35.2799,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A8%D8%AF%D9%88%D9%8A+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A8%D8%AF%D9%88%D9%8A+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A8%D8%AF%D9%88%D9%8A+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A8%D8%AF%D9%88%D9%8A+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599251381",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية زهرة المدائن",
+    "area": "مخيم بلاطة",
+    "street": "شارع المدارس",
+    "phone": "2325252",
+    "mobile": "0599464851",
+    "pharmacist": "بشار عدي رفعت هاشم",
+    "address": "مخيم بلاطة - شارع المدارس",
+    "source": "PPA",
+    "id": 51,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.213,
+    "lng": 35.2799,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B2%D9%87%D8%B1%D8%A9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%A6%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%B1%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B2%D9%87%D8%B1%D8%A9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%A6%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%B1%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B2%D9%87%D8%B1%D8%A9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%A6%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%B1%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B2%D9%87%D8%B1%D8%A9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%A6%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D8%B1%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599464851",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية كريم",
+    "area": "مخيم بلاطة",
+    "street": "شارع السوق",
+    "phone": "",
+    "mobile": "0597444345",
+    "pharmacist": "يوسف محمود محمد عدوان",
+    "address": "مخيم بلاطة - شارع السوق",
+    "source": "PPA",
+    "id": 52,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.213,
+    "lng": 35.2799,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%83%D8%B1%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%83%D8%B1%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%83%D8%B1%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%83%D8%B1%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%A8%D9%84%D8%A7%D8%B7%D8%A9+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D9%88%D9%82+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970597444345",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية تيم",
+    "area": "مخيم عسكر الجديد",
+    "street": "مخيم عسكر الجديد",
+    "phone": "09-2327509",
+    "mobile": "0598941356",
+    "pharmacist": "حاتم أنور حمدي نابلسي",
+    "address": "مخيم عسكر الجديد",
+    "source": "PPA",
+    "id": 53,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2186,
+    "lng": 35.2925,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AA%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AA%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AA%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AA%D9%8A%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970598941356",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية النجاح",
+    "area": "مخيم عسكر القديم",
+    "street": "مخيم عسكر القديم",
+    "phone": "09-2327685",
+    "mobile": "0599314271",
+    "pharmacist": "صفاء عبد المطلب أحمد عبد الفتاح",
+    "address": "مخيم عسكر القديم",
+    "source": "PPA",
+    "id": 54,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.22,
+    "lng": 35.286,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599314271",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية هناء",
+    "area": "مخيم عسكر القديم",
+    "street": "مخيم عسكر القديم",
+    "phone": "",
+    "mobile": "0599777589",
+    "pharmacist": "هناء مصطفى الخليلي",
+    "address": "مخيم عسكر القديم",
+    "source": "PPA",
+    "id": 55,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.22,
+    "lng": 35.286,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D9%86%D8%A7%D8%A1+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D9%86%D8%A7%D8%A1+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D9%86%D8%A7%D8%A1+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D9%86%D8%A7%D8%A1+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D8%B3%D9%83%D8%B1+%D8%A7%D9%84%D9%82%D8%AF%D9%8A%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599777589",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية العزم",
+    "area": "مخيم عين بيت الماء",
+    "street": "مخيم عين بيت الماء",
+    "phone": "",
+    "mobile": "0595905518",
+    "pharmacist": "رحمه عدنان يوسف أبو السلقان",
+    "address": "مخيم عين بيت الماء",
+    "source": "PPA",
+    "id": 56,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2263,
+    "lng": 35.2455,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B2%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B2%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B2%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B9%D8%B2%D9%85+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970595905518",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية صلاح الدين",
+    "area": "مخيم عين بيت الماء",
+    "street": "مخيم عين بيت الماء",
+    "phone": "2391646",
+    "mobile": "0599888465",
+    "pharmacist": "خالد إسماعيل محمد اشتية",
+    "address": "مخيم عين بيت الماء",
+    "source": "PPA",
+    "id": 57,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2263,
+    "lng": 35.2455,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B5%D9%84%D8%A7%D8%AD+%D8%A7%D9%84%D8%AF%D9%8A%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B5%D9%84%D8%A7%D8%AD+%D8%A7%D9%84%D8%AF%D9%8A%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B5%D9%84%D8%A7%D8%AD+%D8%A7%D9%84%D8%AF%D9%8A%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B5%D9%84%D8%A7%D8%AD+%D8%A7%D9%84%D8%AF%D9%8A%D9%86+%D9%85%D8%AE%D9%8A%D9%85+%D8%B9%D9%8A%D9%86+%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%85%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599888465",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية الإحسان",
+    "area": "نابلس مول",
+    "street": "مقابل نابلس مول",
+    "phone": "2385377",
+    "mobile": "0599257004",
+    "pharmacist": "ماهر إحسان أسعد الشحروري",
+    "address": "مقابل نابلس مول",
+    "source": "PPA",
+    "id": 58,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2216,
+    "lng": 35.2399,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599257004",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية هاني",
+    "area": "واد التفاح",
+    "street": "منطقة واد التفاح",
+    "phone": "2374888",
+    "mobile": "0599370049",
+    "pharmacist": "هاني جودت حسن شويكة",
+    "address": "منطقة واد التفاح - نابلس",
+    "source": "PPA",
+    "id": 59,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2218,
+    "lng": 35.2472,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A7%D9%86%D9%8A+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A7%D9%86%D9%8A+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A7%D9%86%D9%8A+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A7%D9%86%D9%8A+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+-+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970599370049",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  },
+  {
+    "name": "صيدلية وليد الجديدة",
+    "area": "واد التفاح",
+    "street": "مفرق واد التفاح",
+    "phone": "2360866",
+    "mobile": "0595375454",
+    "pharmacist": "منال جميل حنا الأطرش",
+    "address": "مفرق واد التفاح",
+    "source": "PPA",
+    "id": 60,
+    "governorate": "نابلس",
+    "owner": "غير متاح في المصدر العام",
+    "lat": 32.2218,
+    "lng": 35.2472,
+    "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "whatsapp": "https://wa.me/970595375454",
+    "dataStatus": "أساسي موثق / الموقع تقريبي"
+  }
+];
+let userLocation = null;
+let filtered = [...PHARMACIES];
+let map, markersLayer;
+
+const $ = sel => document.querySelector(sel);
+const tbody = $('#tbody');
+const areaFilter = $('#areaFilter');
+const search = $('#search');
+const sortBy = $('#sortBy');
+const mobileFilter = $('#mobileFilter');
+
+function kmDistance(a, b) {
+  if (!a || !b) return null;
+  const R = 6371;
+  const dLat = (b.lat-a.lat) * Math.PI/180;
+  const dLng = (b.lng-a.lng) * Math.PI/180;
+  const s1 = Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(s1));
+}
+function normalize(s) { return (s || '').toString().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').toLowerCase().trim(); }
+function escapeHtml(s) { return (s ?? '').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+function uniq(arr) { return [...new Set(arr.filter(Boolean))]; }
+
+function setupFilters() {
+  const areas = uniq(PHARMACIES.map(p => p.area)).sort((a,b)=>a.localeCompare(b,'ar'));
+  for (const a of areas) {
+    const opt = document.createElement('option'); opt.value = a; opt.textContent = a; areaFilter.appendChild(opt);
+  }
+  $('#kpiTotal').textContent = PHARMACIES.length;
+  $('#kpiAreas').textContent = areas.length;
+  $('#kpiMobile').textContent = PHARMACIES.filter(p => p.mobile).length;
+  $('#chips').innerHTML = areas.slice(0, 12).map(a => `<button class="btn-secondary" style="padding:7px 10px;font-size:13px" onclick="setArea('${escapeHtml(a)}')">${escapeHtml(a)}</button>`).join('');
+}
+window.setArea = function(a) { areaFilter.value = a; applyFilters(); window.scrollTo({top: 250, behavior:'smooth'}); }
+
+function applyFilters() {
+  const q = normalize(search.value);
+  const a = areaFilter.value;
+  const mf = mobileFilter.value;
+  filtered = PHARMACIES.filter(p => {
+    const hay = normalize([p.name,p.area,p.street,p.address,p.phone,p.mobile,p.pharmacist,p.owner].join(' '));
+    if (q && !hay.includes(q)) return false;
+    if (a && p.area !== a) return false;
+    if (mf === 'hasMobile' && !p.mobile) return false;
+    if (mf === 'hasPhone' && !p.phone) return false;
+    return true;
+  });
+  sortRecords();
+  renderTable();
+  renderMap();
+}
+function sortRecords() {
+  const s = sortBy.value;
+  filtered.sort((x,y) => {
+    if (s === 'distance' && userLocation) {
+      return (kmDistance(userLocation, x) ?? 9999) - (kmDistance(userLocation, y) ?? 9999);
+    }
+    if (s === 'area') return (x.area+x.name).localeCompare(y.area+y.name,'ar');
+    return x.name.localeCompare(y.name,'ar');
+  });
+}
+function socialLinks(p) {
+  const links = [
+    `<a class="linkbtn" target="_blank" href="${p.mapUrl}">خرائط Google</a>`,
+    `<a class="linkbtn" target="_blank" href="${p.osmUrl}">OSM</a>`,
+    `<a class="linkbtn" target="_blank" href="${p.facebook}">بحث Facebook</a>`,
+    `<a class="linkbtn" target="_blank" href="${p.instagram}">بحث Instagram</a>`
+  ];
+  if (p.whatsapp) links.push(`<a class="linkbtn" target="_blank" href="${p.whatsapp}">WhatsApp محتمل</a>`);
+  return `<div class="links">${links.join('')}</div>`;
+}
+function renderTable() {
+  $('#countText').textContent = filtered.length;
+  tbody.innerHTML = filtered.map((p, idx) => {
+    const d = userLocation ? kmDistance(userLocation, p) : null;
+    const dist = d == null ? '' : `<div class="distance">≈ ${d.toFixed(2)} كم</div>`;
+    return `<tr>
+      <td>${idx+1}</td>
+      <td><div class="pharmacy">${escapeHtml(p.name)}</div>${dist}<div class="mini">${escapeHtml(p.source)}</div></td>
+      <td>${escapeHtml(p.area)}</td>
+      <td>${escapeHtml(p.street || p.address)}<div class="mini">${escapeHtml(p.address)}</div></td>
+      <td dir="ltr">${escapeHtml(p.phone || '—')}</td>
+      <td dir="ltr">${escapeHtml(p.mobile || '—')}</td>
+      <td>${escapeHtml(p.pharmacist || '—')}</td>
+      <td><span class="muted">${escapeHtml(p.owner)}</span></td>
+      <td>${socialLinks(p)}</td>
+      <td><span class="quality">${escapeHtml(p.geoAccuracy)}</span></td>
+    </tr>`;
+  }).join('');
+  $('#empty').style.display = filtered.length ? 'none' : 'block';
+}
+function renderMap() {
+  if (!window.L) return;
+  if (!map) {
+    map = L.map('map', { zoomControl: true }).setView([32.2211, 35.2544], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap contributors' }).addTo(map);
+    markersLayer = L.layerGroup().addTo(map);
+  }
+  markersLayer.clearLayers();
+  const bounds = [];
+  for (const p of filtered) {
+    if (!p.lat || !p.lng) continue;
+    const marker = L.marker([p.lat, p.lng]).bindPopup(`<div dir="rtl" style="font-family:Tajawal,Arial;min-width:220px"><strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.address)}<br><span style="color:#6b7280">${escapeHtml(p.phone || p.mobile || '')}</span><br><a href="${p.mapUrl}" target="_blank">فتح في خرائط Google</a></div>`);
+    marker.addTo(markersLayer);
+    bounds.push([p.lat, p.lng]);
+  }
+  if (userLocation) {
+    L.circleMarker([userLocation.lat, userLocation.lng], {radius:8}).bindPopup('موقعك التقريبي').addTo(markersLayer);
+    bounds.push([userLocation.lat, userLocation.lng]);
+  }
+  if (bounds.length) map.fitBounds(bounds, { padding:[30,30], maxZoom:14 });
+}
+function locateUser() {
+  const status = $('#locationStatus');
+  status.style.display = 'block';
+  if (!navigator.geolocation) {
+    status.textContent = 'المتصفح لا يدعم تحديد الموقع. يمكن استخدام البحث والفلترة يدويًا.';
+    return;
+  }
+  status.textContent = 'جاري طلب موقعك من المتصفح...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    sortBy.value = 'distance';
+    status.innerHTML = 'تم تحديد موقعك. تم ترتيب النتائج حسب الأقرب تقريبًا. <strong>ملاحظة:</strong> مواقع الصيدليات تقريبية حسب المنطقة/الشارع وليست GPS رسميًا.';
+    applyFilters();
+  }, err => {
+    status.textContent = 'تعذر الحصول على الموقع: ' + err.message + '. تأكد من السماح للموقع أو استخدم البحث اليدوي.';
+  }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
+}
+function exportCsv() {
+  const headers = ['name','area','street','phone','mobile','pharmacist','owner','address','lat','lng','geoAccuracy','mapUrl','whatsapp','facebook','instagram','source'];
+  const rows = [headers.join(',')].concat(filtered.map(p => headers.map(h => '"' + String(p[h] ?? '').replaceAll('"','""') + '"').join(',')));
+  const blob = new Blob(["﻿" + rows.join('
+')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'nablus_pharmacies_filtered.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+search.addEventListener('input', applyFilters);
+areaFilter.addEventListener('change', applyFilters);
+sortBy.addEventListener('change', applyFilters);
+mobileFilter.addEventListener('change', applyFilters);
+$('#locate').addEventListener('click', locateUser);
+$('#reset').addEventListener('click', () => { search.value=''; areaFilter.value=''; sortBy.value='name'; mobileFilter.value=''; userLocation=null; $('#locationStatus').style.display='none'; applyFilters(); });
+$('#exportCsv').addEventListener('click', exportCsv);
+
+setupFilters();
+applyFilters();
+</script>
+</body>
+</html>
