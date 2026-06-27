@@ -7,7 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQfRChMYf/5AT0uzFSxq4b3m6K5wLw=" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="" />
   <style>
     :root {
       --bg: #f6f7fb;
@@ -25,7 +26,7 @@
     }
     * { box-sizing: border-box; }
     body { margin:0; background:var(--bg); color:var(--ink); font-family:'Tajawal', system-ui, -apple-system, Segoe UI, Arial, sans-serif; }
-    header { background: linear-gradient(135deg, var(--maroon), #65102a); color:#fff; padding: 28px 22px 34px; position:relative; overflow:hidden; }
+    header { background: linear-gradient(135deg, var(--maroon), #65102a); color:#fff; padding: 28px 22px; position:relative; overflow:hidden; }
     header::after { content:""; position:absolute; inset:auto -80px -80px auto; width:260px; height:260px; border-radius:50%; background:rgba(169,133,59,.25); }
     .wrap { max-width: 1280px; margin: 0 auto; }
     .titlebar { display:flex; gap:18px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; position:relative; z-index:1; }
@@ -33,17 +34,16 @@
     .subtitle { margin:0; max-width:900px; line-height:1.8; color:#f9e7ee; }
     .badge { display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.1); padding:10px 12px; border-radius:999px; white-space:nowrap; }
     main { padding: 22px; }
-    .notice { background:#fff8e6; border:1px solid #f0d58b; color:#5f4500; padding:14px 16px; border-radius:18px; line-height:1.8; margin-top:-34px; position:relative; z-index:2; box-shadow:var(--shadow); }
-    .grid { display:grid; grid-template-columns: 1.25fr .75fr; gap:18px; margin-top:18px; }
+.grid { display:grid; grid-template-columns: 1.25fr .75fr; gap:18px; margin-top:18px; }
     @media (max-width: 960px) { .grid { grid-template-columns:1fr; } }
     .card { background:var(--card); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); }
     .card .head { padding:16px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
     .card .body { padding:18px; }
-    .kpis { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:12px; margin:18px 0; }
-    @media (max-width: 760px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    .kpi { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; box-shadow:0 10px 30px rgba(31,41,55,.05); }
-    .kpi span { display:block; color:var(--muted); font-size:13px; }
-    .kpi strong { display:block; font-size:28px; margin-top:4px; color:var(--maroon); }
+    .search-card { margin-top:22px; }
+    .header-kpis { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; position:relative; z-index:1; }
+    .hkpi { flex:1; min-width:130px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); border-radius:14px; padding:12px 16px; }
+    .hkpi span { display:block; color:rgba(255,255,255,.72); font-size:12px; }
+    .hkpi strong { display:block; font-size:26px; font-weight:800; color:#fff; margin-top:2px; }
     .toolbar { display:grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap:10px; }
     @media (max-width: 980px) { .toolbar { grid-template-columns:1fr 1fr; } }
     @media (max-width: 560px) { .toolbar { grid-template-columns:1fr; } }
@@ -57,18 +57,30 @@
     .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
     .chip { border:1px solid var(--line); background:#fff; padding:8px 10px; border-radius:999px; color:var(--muted); font-size:13px; }
     #map { height: 560px; min-height: 360px; border-radius:0 0 22px 22px; }
-    .table-wrap { overflow:auto; border-radius:18px; border:1px solid var(--line); }
-    table { width:100%; border-collapse: collapse; min-width: 1180px; background:#fff; }
-    th, td { padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:top; text-align:right; }
-    th { position:sticky; top:0; z-index:5; background:#fafafa; color:#374151; font-weight:800; }
-    tr:hover td { background:#fcf7f9; }
-    .pharmacy { font-weight:800; color:var(--maroon); }
     .muted { color:var(--muted); }
-    .quality { display:inline-flex; border-radius:999px; padding:5px 9px; font-size:12px; background:#fff7ed; color:#9a3412; border:1px solid #fed7aa; white-space:nowrap; }
+    .quality { display:inline-flex; border-radius:999px; padding:4px 9px; font-size:11px; background:#fff7ed; color:#9a3412; border:1px solid #fed7aa; white-space:nowrap; }
     .links { display:flex; gap:6px; flex-wrap:wrap; }
-    .linkbtn { text-decoration:none; color:var(--maroon); border:1px solid #ead3dc; background:#fff; border-radius:999px; padding:6px 9px; font-size:12px; white-space:nowrap; }
-    .linkbtn:hover { background:#fff5f8; }
-    .distance { color:var(--green); font-weight:800; }
+    .linkbtn { text-decoration:none; color:var(--maroon); border:1px solid #ead3dc; background:#fff; border-radius:999px; padding:7px 11px; font-size:14px; white-space:nowrap; transition:.15s ease; display:inline-flex; align-items:center; gap:5px; }
+    .linkbtn:hover { background:#fff5f8; border-color:var(--maroon); transform:translateY(-1px); }
+    .linkbtn.lb-maps { color:#1a73e8; border-color:#c5d9f7; }
+    .linkbtn.lb-maps:hover { background:#eef4fd; border-color:#1a73e8; }
+    .linkbtn.lb-wa { color:#25d366; border-color:#b7f0cf; }
+    .linkbtn.lb-wa:hover { background:#edfdf3; border-color:#25d366; }
+    .linkbtn.lb-fb { color:#1877f2; border-color:#c0d9fc; }
+    .linkbtn.lb-fb:hover { background:#eef3fd; border-color:#1877f2; }
+    .linkbtn.lb-ig { color:#e1306c; border-color:#f9c2d4; }
+    .linkbtn.lb-ig:hover { background:#fef0f5; border-color:#e1306c; }
+    .linkbtn.lb-osm { color:#7d4e1d; border-color:#e2ccb3; }
+    .linkbtn.lb-osm:hover { background:#fdf6ee; border-color:#7d4e1d; }
+    .cards-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap:14px; }
+    .pharm-card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px 18px; display:flex; flex-direction:column; gap:10px; transition:.2s ease; }
+    .pharm-card:hover { box-shadow:0 10px 32px rgba(138,21,56,.11); border-color:#e0b8c8; transform:translateY(-2px); }
+    .pname { font-size:16px; font-weight:800; color:var(--maroon); line-height:1.3; }
+    .parea-badge { display:inline-flex; background:#fff0f5; color:var(--maroon); border:1px solid #ead3dc; border-radius:999px; padding:3px 10px; font-size:12px; white-space:nowrap; }
+    .pstreet { color:var(--muted); font-size:13px; }
+    .prow { display:flex; gap:6px; align-items:baseline; font-size:13.5px; }
+    .plabel { color:var(--muted); font-size:12px; flex-shrink:0; }
+    .pdist { font-weight:800; color:var(--green); font-size:13px; }
     .empty { padding:28px; text-align:center; color:var(--muted); }
     .footer-note { color:var(--muted); line-height:1.8; font-size:13px; padding:18px 0 6px; }
     .mini { font-size:12px; color:var(--muted); }
@@ -80,27 +92,24 @@
 </head>
 <body>
 <header>
-  <div class="wrap titlebar">
-    <div>
-      <h1>دليل صيدليات نابلس التفاعلي</h1>
-      <p class="subtitle">بحث وفلترة وخريطة وفرز حسب الأقرب. البيانات الأساسية مأخوذة من القائمة العامة للصيدليات، مع إضافة إحداثيات تقريبية حسب المنطقة لتشغيل الخريطة وخاصية الأقرب.</p>
+  <div class="wrap">
+    <div class="titlebar">
+      <div>
+        <h1>دليل صيدليات نابلس التفاعلي</h1>
+        <p class="subtitle">بحث وفلترة وخريطة وفرز حسب الأقرب. البيانات الأساسية مأخوذة من القائمة العامة للصيدليات، مع إضافة إحداثيات تقريبية حسب المنطقة لتشغيل الخريطة وخاصية الأقرب.</p>
+      </div>
+      <div class="badge">💊 <strong>نسخة عمل قابلة للتحديث</strong></div>
     </div>
-    <div class="badge">💊 <strong>نسخة عمل قابلة للتحديث</strong></div>
+    <div class="header-kpis">
+      <div class="hkpi"><span>عدد الصيدليات</span><strong id="kpiTotal">0</strong></div>
+      <div class="hkpi"><span>المناطق / الشوارع</span><strong id="kpiAreas">0</strong></div>
+      <div class="hkpi"><span>بها جوال / واتساب</span><strong id="kpiMobile">0</strong></div>
+      <div class="hkpi"><span>إحداثيات الخريطة</span><strong>تقريبية</strong></div>
+    </div>
   </div>
 </header>
 <main class="wrap">
-  <div class="notice">
-    <strong>تنبيه مهم:</strong> المصدر العام يوفّر: اسم الصيدلية، العنوان، هاتف الصيدلية، الجوال، والصيدلي المسؤول. لا يوفّر بشكل موثوق: مالك الصيدلية، روابط فيسبوك/إنستغرام، أو إحداثيات GPS دقيقة؛ لذلك تظهر هذه الحقول كـ “غير متاح” أو روابط بحث/واتساب محتملة، وليست صفحات رسمية مؤكدة.
-  </div>
-
-  <section class="kpis">
-    <div class="kpi"><span>عدد السجلات في هذه النسخة</span><strong id="kpiTotal">0</strong></div>
-    <div class="kpi"><span>المناطق/الشوارع</span><strong id="kpiAreas">0</strong></div>
-    <div class="kpi"><span>سجلات بها جوال</span><strong id="kpiMobile">0</strong></div>
-    <div class="kpi"><span>إحداثيات الخريطة</span><strong>تقريبية</strong></div>
-  </section>
-
-  <section class="card">
+  <section class="card search-card">
     <div class="head">
       <div>
         <strong>البحث والفلترة</strong>
@@ -139,25 +148,7 @@
         </div>
       </div>
       <div class="body">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>الصيدلية</th>
-                <th>المنطقة</th>
-                <th>الشارع/العنوان</th>
-                <th>الهاتف</th>
-                <th>الجوال / واتساب</th>
-                <th>الصيدلي المسؤول</th>
-                <th>صاحب الصيدلية</th>
-                <th>الخريطة / السوشال</th>
-                <th>ملاحظة الموقع</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
+        <div id="cards-grid" class="cards-grid"></div>
         <div id="empty" class="empty" style="display:none">لا توجد نتائج مطابقة.</div>
       </div>
     </div>
@@ -192,7 +183,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85-%D8%A8%D9%84%D8%B3-%D9%86%D8%A7%D8%A8%D9%84%D8%B3-61587149407018/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D8%A7%D8%B1%D9%82+%D8%A8%D9%86+%D8%B2%D9%8A%D8%A7%D8%AF+-+%D9%85%D9%86%D8%B7%D9%82%D8%A9+%D8%A7%D9%84%D8%AC%D8%A8%D9%84+%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599333534",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -258,7 +249,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/balsamwaddahq/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A8%D9%84%D8%B3%D9%85+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9+%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970569499500",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -412,7 +403,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9-Rashid-Pharm-Amerieh-100063524380045/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF+%D8%AD%D9%8A+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599249709",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -522,7 +513,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/El.Moatasem.Pharmacy/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D8%B5%D9%85+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599333534",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -566,7 +557,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/SalemPharm22/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D8%A7%D9%84%D9%85+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%88%D9%86%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970598522112",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -632,7 +623,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/LeannPharmacy/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%84%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599098767",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -654,7 +645,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D9%86%D8%BA%D9%85-Nagham-Pharmacy-100057774605105/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D8%BA%D9%85+%D8%A8%D9%84%D8%AF%D8%A9+%D8%B1%D9%81%D9%8A%D8%AF%D9%8A%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599047518",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -720,7 +711,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/61572385928680/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%81%D9%8A%D8%AD%D8%A7%D8%A1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599318495",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -764,7 +755,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/alyousefpharmacy/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%86%D9%88%D8%B1+%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599280428",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -808,7 +799,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/Oxygen-Pharmacy-%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%A7%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86-100030060796630/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AA%D9%84+-+%D9%82%D8%B1%D8%A8+%D9%85%D8%B3%D8%AC%D8%AF+%D8%A7%D9%84%D9%86%D9%88%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599477466",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -874,7 +865,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/ghazipharmacy/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%BA%D8%A7%D8%B2%D9%8A+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%AD%D9%8A%D9%81%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599899701",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -896,7 +887,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%B3%D9%81%D9%8A%D8%A7%D9%86-100053053496008/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B3%D9%81%D9%8A%D8%A7%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970597643225",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -962,7 +953,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/Heba-Pharmacy-%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D9%87%D8%A8%D9%87-100063028612186/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%87%D8%A8%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D8%B5%D9%8A%D8%B1%D8%A9+-+%D8%A8%D8%AC%D8%A7%D9%86%D8%A8+%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970597016433",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1050,7 +1041,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/Ibn-Sina-Online-100054602942338/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D8%A8%D9%86+%D8%B3%D9%8A%D9%86%D8%A7+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B9%D9%85%D8%B1+%D8%A7%D9%84%D9%85%D8%AE%D8%AA%D8%A7%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599257057",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1094,7 +1085,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/Khorsheedpharmacy/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%88%D8%B1%D8%B4%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%BA%D8%B1%D9%86%D8%A7%D8%B7%D8%A9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970597887188",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1116,7 +1107,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF-100052566112845/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D9%88%D9%84%D9%8A%D8%AF+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599298849",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1160,7 +1151,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/Khulood-pharmacy-%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87-%D8%AE%D9%84%D9%88%D8%AF-100090822214623/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AE%D9%84%D9%88%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+-+%D8%B4%D8%A7%D8%B1%D8%B9+%D9%85%D8%AD%D9%85%D9%88%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970595053862",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1204,7 +1195,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/p/Oxygen-Pharmacy-%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%A7%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86-100030060796630/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A3%D9%88%D9%83%D8%B3%D8%AC%D9%8A%D9%86+-+%D9%81%D8%B1%D8%B9%2F%D8%B3%D8%AC%D9%84+%D8%A2%D8%AE%D8%B1+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970567558843",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1226,7 +1217,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/308688239776156/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AC%D9%88%D8%A7%D8%AF+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599336058",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1446,7 +1437,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/people/%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9-%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86-%D9%86%D8%A7%D8%A8%D9%84%D8%B3/100054638880830/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%A5%D8%AD%D8%B3%D8%A7%D9%86+%D9%85%D9%82%D8%A7%D8%A8%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%85%D9%88%D9%84+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970599257004",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1490,7 +1481,7 @@ const PHARMACIES = [
     "geoAccuracy": "تقريبي حسب المنطقة/الشارع — غير رسمي",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "osmUrl": "https://www.openstreetmap.org/search?query=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
-    "facebook": "https://www.facebook.com/search/top?q=%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
+    "facebook": "https://www.facebook.com/WaleedAljadedaPharmac/",
     "instagram": "https://www.google.com/search?q=site%3Ainstagram.com+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D9%88%D9%84%D9%8A%D8%AF+%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9+%D9%85%D9%81%D8%B1%D9%82+%D9%88%D8%A7%D8%AF+%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%AD+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
     "whatsapp": "https://wa.me/970595375454",
     "dataStatus": "أساسي موثق / الموقع تقريبي"
@@ -1501,7 +1492,7 @@ let filtered = [...PHARMACIES];
 let map, markersLayer;
 
 const $ = sel => document.querySelector(sel);
-const tbody = $('#tbody');
+const cardsGrid = $('#cards-grid');
 const areaFilter = $('#areaFilter');
 const search = $('#search');
 const sortBy = $('#sortBy');
@@ -1559,31 +1550,38 @@ function sortRecords() {
 }
 function socialLinks(p) {
   const links = [
-    `<a class="linkbtn" target="_blank" href="${p.mapUrl}">خرائط Google</a>`,
-    `<a class="linkbtn" target="_blank" href="${p.osmUrl}">OSM</a>`,
-    `<a class="linkbtn" target="_blank" href="${p.facebook}">بحث Facebook</a>`,
-    `<a class="linkbtn" target="_blank" href="${p.instagram}">بحث Instagram</a>`
+    `<a class="linkbtn lb-maps" target="_blank" href="${p.mapUrl}"><i class="fa-solid fa-map-location-dot"></i></a>`,
+    `<a class="linkbtn lb-osm" target="_blank" href="${p.osmUrl}"><i class="fa-solid fa-map"></i></a>`,
+    `<a class="linkbtn lb-fb" target="_blank" href="${p.facebook}"><i class="fa-brands fa-facebook-f"></i></a>`,
+    `<a class="linkbtn lb-ig" target="_blank" href="${p.instagram}"><i class="fa-brands fa-instagram"></i></a>`
   ];
-  if (p.whatsapp) links.push(`<a class="linkbtn" target="_blank" href="${p.whatsapp}">WhatsApp محتمل</a>`);
+  if (p.whatsapp) links.push(`<a class="linkbtn lb-wa" target="_blank" href="${p.whatsapp}"><i class="fa-brands fa-whatsapp"></i></a>`);
   return `<div class="links">${links.join('')}</div>`;
 }
 function renderTable() {
   $('#countText').textContent = filtered.length;
-  tbody.innerHTML = filtered.map((p, idx) => {
+  cardsGrid.innerHTML = filtered.map(p => {
     const d = userLocation ? kmDistance(userLocation, p) : null;
-    const dist = d == null ? '' : `<div class="distance">≈ ${d.toFixed(2)} كم</div>`;
-    return `<tr>
-      <td>${idx+1}</td>
-      <td><div class="pharmacy">${escapeHtml(p.name)}</div>${dist}<div class="mini">${escapeHtml(p.source)}</div></td>
-      <td>${escapeHtml(p.area)}</td>
-      <td>${escapeHtml(p.street || p.address)}<div class="mini">${escapeHtml(p.address)}</div></td>
-      <td dir="ltr">${escapeHtml(p.phone || '—')}</td>
-      <td dir="ltr">${escapeHtml(p.mobile || '—')}</td>
-      <td>${escapeHtml(p.pharmacist || '—')}</td>
-      <td><span class="muted">${escapeHtml(p.owner)}</span></td>
-      <td>${socialLinks(p)}</td>
-      <td><span class="quality">${escapeHtml(p.geoAccuracy)}</span></td>
-    </tr>`;
+    const dist = d != null ? `<div class="pdist">📍 ≈ ${d.toFixed(2)} كم</div>` : '';
+    const phone = p.phone ? `<div class="prow"><span class="plabel">هاتف</span><span dir="ltr">${escapeHtml(p.phone)}</span></div>` : '';
+    const mobile = p.mobile ? `<div class="prow"><span class="plabel">جوال</span><span dir="ltr">${escapeHtml(p.mobile)}</span></div>` : '';
+    const pharmacist = p.pharmacist ? `<div class="prow"><span class="plabel">صيدلي</span><span>${escapeHtml(p.pharmacist)}</span></div>` : '';
+    return `<div class="pharm-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
+        <div class="pname">💊 ${escapeHtml(p.name)}</div>
+        <span class="parea-badge">${escapeHtml(p.area)}</span>
+      </div>
+      ${p.street ? `<div class="pstreet">📌 ${escapeHtml(p.street)}</div>` : ''}
+      ${dist}
+      <div style="display:flex;flex-direction:column;gap:5px">${phone}${mobile}${pharmacist}</div>
+      <div class="links">
+        <a class="linkbtn lb-maps" title="خرائط Google" target="_blank" href="${p.mapUrl}"><i class="fa-solid fa-map-location-dot"></i></a>
+        ${p.whatsapp ? `<a class="linkbtn lb-wa" title="واتساب" target="_blank" href="${p.whatsapp}"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+        <a class="linkbtn lb-fb" title="Facebook" target="_blank" href="${p.facebook}"><i class="fa-brands fa-facebook-f"></i></a>
+        <a class="linkbtn lb-ig" title="Instagram" target="_blank" href="${p.instagram}"><i class="fa-brands fa-instagram"></i></a>
+        <a class="linkbtn lb-osm" title="OpenStreetMap" target="_blank" href="${p.osmUrl}"><i class="fa-solid fa-map"></i></a>
+      </div>
+    </div>`;
   }).join('');
   $('#empty').style.display = filtered.length ? 'none' : 'block';
 }
@@ -1628,8 +1626,7 @@ function locateUser() {
 function exportCsv() {
   const headers = ['name','area','street','phone','mobile','pharmacist','owner','address','lat','lng','geoAccuracy','mapUrl','whatsapp','facebook','instagram','source'];
   const rows = [headers.join(',')].concat(filtered.map(p => headers.map(h => '"' + String(p[h] ?? '').replaceAll('"','""') + '"').join(',')));
-  const blob = new Blob(["﻿" + rows.join('
-')], {type:'text/csv;charset=utf-8;'});
+  const blob = new Blob(["﻿" + rows.join('\n')], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = 'nablus_pharmacies_filtered.csv'; a.click(); URL.revokeObjectURL(url);
